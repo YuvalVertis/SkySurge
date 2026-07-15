@@ -1,23 +1,22 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class SpikesAdv : MonoBehaviour
+public sealed class SpikesAdv : MonoBehaviour
 {
     // Spikes systems with a lot of spikes behaviours.
     [Header("Horizontal Switching")]
     [SerializeField] float duration;
     [SerializeField] Transform[] spikes;
     [SerializeField] bool toSwitch;
-    private void Start()
+
+    void Start()
     {
         if(toSwitch)
         {
             StartCoroutine(Switch());
         }
     }
+
     IEnumerator Switch()
     {
         float time;

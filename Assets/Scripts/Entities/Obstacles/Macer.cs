@@ -1,15 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
-public class Macer : MonoBehaviour
+public sealed class Macer : MonoBehaviour
 {
     [SerializeField] float duration;
-    private void Start()
+
+    void Start()
     {
         StartCoroutine(Attack());
     }
+
     IEnumerator Attack()
     {
         while(true)

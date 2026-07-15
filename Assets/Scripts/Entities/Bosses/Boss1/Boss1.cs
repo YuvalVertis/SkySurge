@@ -1,8 +1,8 @@
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using System.Collections;
+using UnityEngine;
 
 public class Boss1 : MonoBehaviour
 {
@@ -16,18 +16,21 @@ public class Boss1 : MonoBehaviour
     SpriteRenderer[] spriteRenderers;
     float startTime, duration, targetY;
     bool tracker, raged, doneAttacking, stage, end, died;
-    private void Awake()
+
+    void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
         sr = gameObject.GetComponent<SpriteRenderer>();
         startTime = cooldown;
     }
+
     void Start()
     {
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
-    private void Update()
+
+    void Update()
     {
         if (cooldown > 0)
         {
@@ -61,13 +64,14 @@ public class Boss1 : MonoBehaviour
             died = true;
         }
     }
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         if(!stage && !died)
         {
             Follow(); 
         }
     }
+
     void Follow()
     {
         Vector2 direction = new Vector2(player.position.x - transform.position.x, 0f).normalized;
@@ -78,6 +82,7 @@ public class Boss1 : MonoBehaviour
             rb.MovePosition(newPosition);
         } 
     }
+
     IEnumerator Attack()
     {
         doneAttacking = false;
@@ -115,6 +120,7 @@ public class Boss1 : MonoBehaviour
         tracker = false;
         cooldown = startTime;
     }
+
     IEnumerator Stage2()
     {
         stage = true;
@@ -158,6 +164,7 @@ public class Boss1 : MonoBehaviour
         end = true;
         stage = false;
     }
+
     IEnumerator Die()
     {
         float duration = 0.25f;

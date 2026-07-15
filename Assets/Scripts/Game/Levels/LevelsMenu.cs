@@ -1,9 +1,7 @@
- using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
-public class LevelsMenu : MonoBehaviour
+public sealed class LevelsMenu : MonoBehaviour
 {
     public void LevelMenu()
     {

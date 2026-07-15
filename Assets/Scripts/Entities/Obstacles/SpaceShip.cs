@@ -1,24 +1,22 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class SpaceShip : MonoBehaviour
+public sealed class SpaceShip : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] float followSpeed, flySpeed, acceleration, duration;
-    private float currentSpeed, accelerationTimer;
+    float currentSpeed, accelerationTimer;
     [SerializeField] Transform[] points;
     int currentPoint = 0;
     float defaultPos1, defaultPos2;
     bool stagedUp = false;
-    private void Awake()
+
+    void Awake()
     {
         currentSpeed = flySpeed;
         defaultPos1 = points[0].position.x;
         defaultPos2 = points[1].position.x;
     }
+
     void Update()
     { 
         if(!stagedUp)
@@ -52,6 +50,7 @@ public class SpaceShip : MonoBehaviour
         points[0].position = new Vector2(defaultPos1, points[0].position.y);
         points[1].position = new Vector2(defaultPos2, points[1].position.y);
     }
+
     void Stage2()
     {
         float targetX = Mathf.Lerp(transform.position.x, target.position.x, followSpeed * Time.deltaTime);

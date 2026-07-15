@@ -1,17 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Fade : MonoBehaviour
+public sealed class Fade : MonoBehaviour
 {
     SpriteRenderer sr;
     [SerializeField] float duration;
-    private void Awake()
+
+    void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         StartCoroutine(FadeEffect());
     }
+
     IEnumerator FadeEffect()
     {
         Color defaultColor = sr.color;

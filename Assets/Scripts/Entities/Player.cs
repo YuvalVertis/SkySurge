@@ -1,6 +1,6 @@
-using UnityEngine;
 using UnityEngine.SceneManagement;
-public class Player : MonoBehaviour
+using UnityEngine;
+public sealed class Player : MonoBehaviour
 {
     Rigidbody2D rb;
     Animator anim;
@@ -13,17 +13,21 @@ public class Player : MonoBehaviour
     float moveX, defaultGravity;
     bool rotated, jumped, grounded, gravityModified, run;
     public bool fastFall = true;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         checkPos = transform.Find("CheckPos");
+
         if (GameObject.FindGameObjectsWithTag("Cloud").Length > 0)
         {
             movePlatfrom = GameObject.FindWithTag("Cloud").GetComponent<MovePlatform>();
         }
+
         defaultGravity = rb.gravityScale;
     }
+
     void Update()
     {
         moveX = Input.GetAxisRaw("Horizontal");
@@ -42,7 +46,8 @@ public class Player : MonoBehaviour
             run = false;
         }
     }
-    private void FixedUpdate()
+
+    void FixedUpdate()
     {
         grounded = Physics2D.OverlapCircle(checkPos.position, checkRadius, checkLayer);
         if (movePlatfrom == null || !movePlatfrom.clouded)
@@ -80,7 +85,8 @@ public class Player : MonoBehaviour
             rotated = true;
         }
     }
-    private void HandleLevelCompletion()
+
+    void HandleLevelCompletion()
     {
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
         if (unlockedLevel == 8)
@@ -99,14 +105,14 @@ public class Player : MonoBehaviour
         PlayerPrefs.Save();
         SceneManager.LoadScene("Levels");
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Finish"))
-        {
-            HandleLevelCompletion();
-        }
+        if (!collision.gameObject.CompareTag("Finish")) return;
+        HandleLevelCompletion();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {

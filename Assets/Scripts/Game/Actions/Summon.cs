@@ -1,20 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Summon : MonoBehaviour
+public sealed class Summon : MonoBehaviour
 {
     [SerializeField] float cooldown;
     [SerializeField] float destroyTime;
     [SerializeField] GameObject spawnObject;
     float startTime;
     bool tracker;
-    private void Awake()
+
+    void Awake()
     {
         cooldown = Random.Range(2.5f, 3.5f);
         startTime = cooldown;
     }
-    private void Update()
+
+    void Update()
     {
         if (cooldown > 0)
         {
@@ -26,6 +27,7 @@ public class Summon : MonoBehaviour
             tracker = true;
         }
     }
+
     IEnumerator SpawnObject()
     {
         yield return null;

@@ -1,17 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using System.Collections;
+using UnityEngine;
 
-public class Glow : MonoBehaviour
+public sealed class Glow : MonoBehaviour
 {
     Light2D glower;
     [SerializeField] float targetInt;
-    private void Start()
+
+    void Start()
     {
         glower = GetComponent<Light2D>();
         StartCoroutine(Glows());
     }
+
     IEnumerator Glows()
     {
         float time;

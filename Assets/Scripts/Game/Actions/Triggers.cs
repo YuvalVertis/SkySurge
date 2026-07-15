@@ -1,13 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Triggers : MonoBehaviour
+public sealed class Triggers : MonoBehaviour
 {
     [SerializeField] GameObject[] saws;
     [SerializeField] SpriteRenderer sr;
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
@@ -25,7 +24,8 @@ public class Triggers : MonoBehaviour
             }
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -43,6 +43,7 @@ public class Triggers : MonoBehaviour
             }
         }
     }
+
     IEnumerator Fade()
     {
         float duration = 1;

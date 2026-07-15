@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine;
+using TMPro;
 
-public class StartGame : MonoBehaviour
+public sealed class StartGame : MonoBehaviour
 {
     [SerializeField] Button[] buttons;
+
     void Start()
     {
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
@@ -25,6 +24,7 @@ public class StartGame : MonoBehaviour
             }
         }
     }
+
     public void ChooseLevel(int level)
     {
         SceneManager.LoadScene("Level " + level);

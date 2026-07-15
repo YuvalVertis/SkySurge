@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
-public class Fall : MonoBehaviour
+public sealed class Fall : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] Vector3 fallCords;

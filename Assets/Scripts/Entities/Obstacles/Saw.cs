@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-public class Saw : MonoBehaviour
+public sealed class Saw : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed;
     [SerializeField] Transform[] points;
     int currentPoint;
-    private void Update()
+
+    void Update()
     {
         Move();
     }
+
     void Move()
     {
         Vector3 targetPoint = points[currentPoint].position;

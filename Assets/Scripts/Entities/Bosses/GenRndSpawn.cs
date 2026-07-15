@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GenRndSpawn : MonoBehaviour
@@ -10,12 +9,14 @@ public class GenRndSpawn : MonoBehaviour
     BoxCollider2D boxCollider;
     float startTime;
     bool tracker;
-    private void Awake()
+
+    void Awake()
     {
         startTime = cooldown;
         boxCollider = gameObject.GetComponent<BoxCollider2D>();
     }
-    private void Update()
+
+    void Update()
     {
         if (cooldown > 0)
         {
@@ -27,6 +28,7 @@ public class GenRndSpawn : MonoBehaviour
             tracker = true;
         }
     }
+
     IEnumerator SpawnObject()
     {
         yield return null;

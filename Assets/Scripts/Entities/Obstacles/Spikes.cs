@@ -1,15 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Spikes : MonoBehaviour
+public sealed class Spikes : MonoBehaviour
 { 
     [SerializeField] float duration;
     [SerializeField] float range;
-    private void Start()
+    void Start()
     {
         StartCoroutine(Attack());
     }
+
     IEnumerator Attack()
     {
         float time;

@@ -1,18 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-public class MenuEffects : MonoBehaviour
+public sealed class MenuEffects : MonoBehaviour
 {
     [SerializeField] Animator anim;
     [SerializeField] Transform target;
     [SerializeField] RectTransform background;
     [SerializeField] float duration;
-    private void Start()
+    void Start()
     {
         StartCoroutine(Paralax());
         StartCoroutine(Blink());
         StartCoroutine(Look());
     }
+
     IEnumerator Blink()
     {
         float delay;

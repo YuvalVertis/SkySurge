@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class AdvSaw : MonoBehaviour
+public sealed class AdvSaw : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed;
@@ -12,11 +10,13 @@ public class AdvSaw : MonoBehaviour
     float defaultSpeed;
     int currentPoint;
     bool movingForward = true;
-    private void Awake()
+
+    void Awake()
     {
         defaultSpeed = moveSpeed;
     }
-    private void Update()
+
+    void Update()
     {
         Vector3 targetPoint = points[currentPoint].position;
         transform.position = Vector3.MoveTowards(transform.position, targetPoint, moveSpeed * Time.deltaTime);

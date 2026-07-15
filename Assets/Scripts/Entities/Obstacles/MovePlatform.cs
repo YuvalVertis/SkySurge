@@ -1,19 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MovePlatform : MonoBehaviour
+public sealed class MovePlatform : MonoBehaviour
 {
     [SerializeField] Transform[] points;
     public float moveSpeed;
     public float speed;
     public bool clouded = false;
     int currentPoint;
-    private void Awake()
+
+    void Awake()
     {
         speed = -moveSpeed;
     }
-    private void Update()
+    void Update()
     {
         Move();
     }
@@ -31,15 +30,15 @@ public class MovePlatform : MonoBehaviour
             speed *= -1;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        collision.gameObject.CompareTag("Player");
+        if (!collision.gameObject.CompareTag("Player")) return;
         clouded = true;
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    void OnCollisionExit2D(Collision2D collision)
     {
-        collision.gameObject.CompareTag("Player");
+        if (!collision.gameObject.CompareTag("Player")) return;
         clouded = false;
     }
 }

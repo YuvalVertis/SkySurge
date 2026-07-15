@@ -1,15 +1,16 @@
+using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Level : MonoBehaviour
+public sealed class Level : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] GameObject[] sCloud;
     [SerializeField] float fallCords;
     bool tracker;
     public bool fade;
-    private void Update()
+
+    void Update()
     {
         if (target.position.y <= fallCords)
         {
@@ -21,6 +22,7 @@ public class Level : MonoBehaviour
             tracker = true;
         }
     }
+
     IEnumerator Fade()
     {
         float duration = 1f;

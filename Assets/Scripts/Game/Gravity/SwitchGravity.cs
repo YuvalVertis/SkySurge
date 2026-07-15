@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SwitchGravity : MonoBehaviour
+public sealed class SwitchGravity : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float mult;
     public CameraY cameraY;
     bool done;
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Player") && !done)
         {

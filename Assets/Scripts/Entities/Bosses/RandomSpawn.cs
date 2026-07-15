@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class RandomSpawn : MonoBehaviour
+public sealed class RandomSpawn : MonoBehaviour
 {
     [SerializeField] float cooldown;
     [SerializeField] GameObject spawnObject;
@@ -9,13 +9,15 @@ public class RandomSpawn : MonoBehaviour
     Health health;
     float startTime;
     bool tracker;
-    private void Awake()
+
+    void Awake()
     {
         startTime = cooldown;
         boxCollider  = gameObject.GetComponent<BoxCollider2D>();
         health = GameObject.Find("EnemyCloud").GetComponent<Health>();
     }
-    private void Update()
+
+    void Update()
     {
 
         if (cooldown > 0 && health.currentHealth <= 3)
@@ -28,6 +30,7 @@ public class RandomSpawn : MonoBehaviour
             tracker = true;
         }
     }
+
     IEnumerator SpawnObject()
     {
         Vector2 spawnPosition = new Vector2(Random.Range(boxCollider.bounds.min.x, boxCollider.bounds.max.x), transform.position.y);
@@ -38,6 +41,7 @@ public class RandomSpawn : MonoBehaviour
         }
         yield return null;
     }
+
     void SpawnWithDelay()
     {
         StartCoroutine(SpawnObject());

@@ -1,13 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class FadeAdv : MonoBehaviour
+public sealed class FadeAdv : MonoBehaviour
 {
     [SerializeField] SpriteRenderer[] spriteRenderers;
     [SerializeField] float duration;
     bool tracker, notActive;
+
     public IEnumerator FadeEffect()
     {
         for (int i = 0; i < spriteRenderers.Length; i++)
@@ -35,7 +34,7 @@ public class FadeAdv : MonoBehaviour
         // Ensure the last sprite is deactivated regardless of whether it was faded out or not
         spriteRenderers[spriteRenderers.Length - 1].gameObject.SetActive(false);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player") && !tracker)
         {

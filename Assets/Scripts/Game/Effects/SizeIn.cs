@@ -1,16 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SizeIn : MonoBehaviour
+public sealed class SizeIn : MonoBehaviour
 {
     [SerializeField] float duration = 0.25f;
     Vector3 initialScale;
-    private void Awake()
+
+    void Awake()
     {
         initialScale = transform.localScale;
         StartCoroutine(SizeInc());
     }
+
     IEnumerator SizeInc()
     {
         float timer = 0;

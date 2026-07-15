@@ -1,8 +1,8 @@
+using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Boss2 : MonoBehaviour
+public sealed class Boss2 : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] float moveDuration;
@@ -13,7 +13,8 @@ public class Boss2 : MonoBehaviour
     Health health;
     FadeAdv fadeAdvanced;
     FadeMusic fadeMusic;
-    private void Start()
+
+    void Start()
     {
         position = transform.position;
         StartCoroutine(Intro());
@@ -21,7 +22,8 @@ public class Boss2 : MonoBehaviour
         fadeAdvanced = spikes.GetComponent<FadeAdv>();
         fadeMusic = GameObject.FindObjectOfType<FadeMusic>();
     }
-    private void Update()
+
+    void Update()
     {
         if(doneIntro)
         {
@@ -69,6 +71,7 @@ public class Boss2 : MonoBehaviour
             escape = true;
         }
     }
+
     int GetRandom(int min, int max)
     {
         int rand = Random.Range(min, max);
@@ -77,6 +80,7 @@ public class Boss2 : MonoBehaviour
         lastNumber = rand;
         return rand;
     }
+
     IEnumerator Intro() 
     {
         yield return new WaitForSeconds(1f);
@@ -111,6 +115,7 @@ public class Boss2 : MonoBehaviour
         }
         doneIntro = true;
     }
+
     IEnumerator FirstAttack()
     {
         float time = 0;
@@ -151,6 +156,7 @@ public class Boss2 : MonoBehaviour
         moveDuration /= 1.7f;
         attacking = true;
     }
+
     IEnumerator SecondAttack()
     {
         float time = 0;
@@ -204,6 +210,7 @@ public class Boss2 : MonoBehaviour
         }
         attacking = true;
     }
+
     IEnumerator IncreaseSize()
     {
         float time = 0;
@@ -244,6 +251,7 @@ public class Boss2 : MonoBehaviour
         transform.localScale = new Vector2(initialScale.x, initialScale.y);
         attacking = true;
     }
+
     IEnumerator Die()
     {
         float time = 0;
@@ -267,6 +275,7 @@ public class Boss2 : MonoBehaviour
         }
         SceneManager.LoadScene("Levels");
     }
+
     void Switch()
     {
         spikes.GetComponent<SpikesAdv>().enabled = true;

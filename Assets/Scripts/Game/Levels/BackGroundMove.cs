@@ -1,17 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class BackGroundMove : MonoBehaviour
+public sealed class BackGroundMove : MonoBehaviour
 {
     RectTransform background;
     [SerializeField] float duration;
-    private void Start()
+
+    void Start()
     {
         background = GetComponent<RectTransform>();
         StartCoroutine(Paralax());
     }
+
     IEnumerator Paralax()
     {
         float startX = background.anchoredPosition.x;

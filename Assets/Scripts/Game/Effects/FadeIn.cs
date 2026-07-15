@@ -1,16 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FadeIn : MonoBehaviour
+public sealed class FadeIn : MonoBehaviour
 {
     [SerializeField] float duration;
     SpriteRenderer sr;
-    private void Awake()
+    void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
     }
-    private void Start()
+    void Start()
     {
         StartCoroutine(FadeStart());
     }

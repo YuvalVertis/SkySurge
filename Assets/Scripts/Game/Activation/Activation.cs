@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Activation : MonoBehaviour
+public sealed class Activation : MonoBehaviour
 {
     [Header("Active Objects")]
     [SerializeField] GameObject[] aObjects;
@@ -13,23 +11,19 @@ public class Activation : MonoBehaviour
     [SerializeField] bool destroy;
     bool tracker, tracker2;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            HandleCollisionWithPlayer();
-        }
+        if (!other.gameObject.CompareTag("Player")) return;
+        HandleCollisionWithPlayer();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D other)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            HandleCollisionWithPlayer();
-        }
+        if (!other.gameObject.CompareTag("Player")) return;
+        HandleCollisionWithPlayer();
     }
 
-    private void HandleCollisionWithPlayer()
+    void HandleCollisionWithPlayer()
     {
         if (aObjects.Length == 1 && !aObjects[0].activeSelf)
         {

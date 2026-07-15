@@ -1,17 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PitchChanger : MonoBehaviour
+public sealed class PitchChanger : MonoBehaviour
 {
     [SerializeField] float add;
     AudioSource audioS;
     bool changed;
-    private void Awake()
+
+    void Awake()
     {
         audioS = GetComponent<AudioSource>();
     }
-    private void Update()
+
+    void Update()
     {
         if (Application.isFocused && !audioS.isPlaying && !changed)
         {

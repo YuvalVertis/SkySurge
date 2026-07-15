@@ -1,17 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FadeMusic : MonoBehaviour
+public sealed class FadeMusic : MonoBehaviour
 {
     [SerializeField] float duration;
     AudioSource music;
     bool use;
-    private void Awake()
+
+    void Awake()
     {
         music = GetComponent<AudioSource>();
     }
-    private void Update()
+    void Update()
     {
        if(!use)
        {

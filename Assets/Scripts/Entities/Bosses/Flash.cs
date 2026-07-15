@@ -1,15 +1,17 @@
 using System.Collections;
 using UnityEngine;
-public class Flash : MonoBehaviour
+public sealed class Flash : MonoBehaviour
 {
     Material[] material;
     SpriteRenderer[] sr;
-    private void Awake()
+
+    void Awake()
     {
         sr = GetComponentsInChildren<SpriteRenderer>();
         Materials();
     }
-    private void Materials()
+
+    void Materials()
     {
         material = new Material[sr.Length];
         for(int i =0; i < sr.Length; i++)
@@ -17,6 +19,7 @@ public class Flash : MonoBehaviour
             material[i] = sr[i].material;
         }
     }
+
     public IEnumerator FlashEffect()
     {
         for (int i = 0; i < material.Length; i++)
