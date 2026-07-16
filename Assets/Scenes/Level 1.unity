@@ -756,8 +756,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d14e081d6006a439bc0c7db748cdf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 528433263894013829}
   offset: {x: 5, y: 0, z: 0}
+  target: {fileID: 528433263894013829}
   smoothFactor: 2.5
   min: 0.4
   max: 52.8
@@ -2932,7 +2932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266781, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266781, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_TagString

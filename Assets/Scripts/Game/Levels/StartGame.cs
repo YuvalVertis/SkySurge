@@ -25,7 +25,7 @@ public sealed class StartGame : MonoBehaviour
         }
     }
 
-    public void ChooseLevel(int level)
+    public void LoadLevel(int level)
     {
         SceneManager.LoadScene("Level " + level);
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public sealed class Wave : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
