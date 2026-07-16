@@ -1,6 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEditor;
 
 public sealed class Player : MonoBehaviour
 {
@@ -12,23 +13,26 @@ public sealed class Player : MonoBehaviour
     [SerializeField] float acceleration = 30f;
     [SerializeField] float checkDistance;
     [SerializeField] float gravityScaleMult;
+
+    [Header("Ground Check")]
     [SerializeField] Transform leftRay;
     [SerializeField] Transform midRay;
     [SerializeField] Transform rightRay;
     [SerializeField] LayerMask checkLayer;
-
-    bool rotated, jumpPreesed, isGrounded, gravityModified, run;
+    public bool allowFastFall = true;
+    bool jumpPressed, isGrounded, gravityModified, run;
     float moveX, defaultGravity;
-    public bool fastFall = true;
     MovePlatform movePlatfrom;
     Rigidbody2D rb;
     Animator anim;
+    SpriteRenderer sprite;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        
+        sprite = GetComponent<SpriteRenderer>();
+
         if (GameObject.FindGameObjectsWithTag("Cloud").Length > 0)
         {
             movePlatfrom = GameObject.FindWithTag("Cloud").GetComponent<MovePlatform>();
@@ -37,72 +41,73 @@ public sealed class Player : MonoBehaviour
         defaultGravity = rb.gravityScale;
     }
 
-    void Update()
+    public void OnMove(InputValue value)
     {
-        isGrounded = Check();
-        moveX = Input.GetAxisRaw("Horizontal");
-        if (moveX != 0 && !run)
+        moveX = value.Get<float>();
+
+        if (moveX > 0)
         {
-            anim.SetBool("IsRunning", true);
-            run = true;
+            sprite.flipX = false;
         }
-        else if (moveX == 0 && run)
+        else if (moveX < 0)
         {
-            anim.SetBool("IsRunning", false);
-            run = false;
+            sprite.flipX = true;
+        }
+
+        bool isMoving = moveX != 0;
+        if (isMoving != run)
+        {
+            anim.SetBool(CodesManager.Run, isMoving);
+            run = isMoving;
         }
     }
 
     public void OnJump(InputValue value)
     {
-        if(value.isPressed && isGrounded)
+        if (value.isPressed && isGrounded)
         {
-            jumpPreesed = true;
-        } 
+            jumpPressed = true;
+        }
     }
 
     bool Check()
     {
-        return Physics2D.Raycast(leftRay.position, Vector2.down, checkDistance, checkLayer) 
-            || Physics2D.Raycast(midRay.position, Vector2.down, checkDistance, checkLayer) 
+        return Physics2D.Raycast(leftRay.position, Vector2.down, checkDistance, checkLayer)
+            || Physics2D.Raycast(midRay.position, Vector2.down, checkDistance, checkLayer)
             || Physics2D.Raycast(rightRay.position, Vector2.down, checkDistance, checkLayer);
     }
 
     void FixedUpdate()
     {
+        isGrounded = Check();
+        //Normal movement
         if (movePlatfrom == null || !movePlatfrom.clouded)
         {
             rb.AddForce(Vector2.right * moveX * moveSpeed * acceleration, ForceMode2D.Force);
             rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxSpeed, maxSpeed), rb.velocity.y);
         }
+        // OnPlatform
         if (movePlatfrom != null && movePlatfrom.clouded)
         {
             rb.velocity = new Vector2(moveSpeed * moveX + movePlatfrom.speed, rb.velocity.y);
         }
-        if (jumpPreesed)
+        if (jumpPressed)
         {
             rb.velocity = Vector2.up * jumpSpeed;
-            jumpPreesed = false;
+            jumpPressed = false;
         }
+
+        if (!allowFastFall) return;
+
         if (rb.velocity.y <= 0 && !isGrounded && !gravityModified)
         {
-            rb.gravityScale *= gravityScaleMult; 
+            rb.gravityScale *= gravityScaleMult;
             gravityModified = true;
         }
-        if(isGrounded && fastFall)
+        if (isGrounded)
         {
             rb.gravityScale = defaultGravity;
             gravityModified = false;
-        }
-        if (moveX > 0 && rotated)
-        {
-            transform.eulerAngles = new Vector2(0, 0);
-            rotated = false;
-        }
-        if (moveX < 0 && !rotated)
-        {
-            transform.eulerAngles = new Vector2(0, 180);
-            rotated = true;
         }
     }
 
@@ -128,8 +133,10 @@ public sealed class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collision.gameObject.CompareTag("Finish")) return;
-        HandleLevelCompletion();
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+            HandleLevelCompletion();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -142,5 +149,14 @@ public sealed class Player : MonoBehaviour
         {
             HandleLevelCompletion();
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        Gizmos.DrawRay(leftRay.position, Vector2.down * checkDistance);
+        Gizmos.DrawRay(midRay.position, Vector2.down * checkDistance);
+        Gizmos.DrawRay(rightRay.position, Vector2.down * checkDistance);
     }
 }
