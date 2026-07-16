@@ -4,6 +4,7 @@ public sealed class Activation : MonoBehaviour
 {
     [Header("Active Objects")]
     [SerializeField] GameObject[] aObjects;
+
     [Header("Deactive Objects")]
     [SerializeField] GameObject[] dObjects;
     [SerializeField] int enableRange;

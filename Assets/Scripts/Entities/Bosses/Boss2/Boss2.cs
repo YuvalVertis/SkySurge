@@ -2,6 +2,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine;
 
+/*
 public sealed class Boss2 : MonoBehaviour
 {
     [SerializeField] Transform target;
@@ -281,3 +282,4 @@ public sealed class Boss2 : MonoBehaviour
         spikes.GetComponent<SpikesAdv>().enabled = true;
     }
 }
+*/

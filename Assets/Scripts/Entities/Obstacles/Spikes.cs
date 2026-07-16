@@ -1,43 +1,35 @@
-using System.Collections;
+using PrimeTween;
 using UnityEngine;
 
 public sealed class Spikes : MonoBehaviour
 { 
     [SerializeField] float duration;
     [SerializeField] float range;
+    Sequence attackSequence;
+
     void Start()
     {
-        StartCoroutine(Attack());
+        Attack();
     }
 
-    IEnumerator Attack()
+    void Attack()
     {
-        float time;
-        while(true)
+        float startY = transform.position.y;
+
+        attackSequence = Sequence.Create()
+            .Chain(Tween.PositionY(transform, startY + range, duration))
+            .ChainDelay(0.8f)
+            .Chain(Tween.PositionY(transform, startY, duration))
+            .ChainDelay(0.8f);
+
+        attackSequence.SetRemainingCycles(-1);
+    }
+
+    void OnDisable()
+    {
+        if (attackSequence.isAlive)
         {
-            time = 0;
-            Vector2 position = transform.position;
-            while(time < duration)
-            {
-                transform.position = new Vector2(transform.position.x, Mathf.Lerp(position.y, position.y + range, time / duration));
-                time += Time.deltaTime;
-                yield return null;
-            }
-            transform.position = new Vector2(transform.position.x, position.y + range);
-            time = 0;
-            yield return new WaitForSeconds(0.8f);
-            while (time < duration)
-            {
-                transform.position = new Vector2(transform.position.x, Mathf.Lerp(position.y + range, position.y, time / duration));
-                time += Time.deltaTime;
-                yield return null;
-            }
-            transform.position = new Vector2(transform.position.x, position.y);
-            yield return new WaitForSeconds(0.8f);
-            if(this.enabled == false)
-            {
-                yield break;
-            }
+            attackSequence.Stop();
         }
     }
 }

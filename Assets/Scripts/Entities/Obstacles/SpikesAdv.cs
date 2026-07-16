@@ -1,37 +1,37 @@
-using System.Collections;
+using PrimeTween;
 using UnityEngine;
 
 public sealed class SpikesAdv : MonoBehaviour
 {
-    // Spikes systems with a lot of spikes behaviours.
-    [Header("Horizontal Switching")]
-    [SerializeField] float duration;
+    [Header("Spikes")]
     [SerializeField] Transform[] spikes;
-    [SerializeField] bool toSwitch;
+    [SerializeField] float duration;
+    [SerializeField] bool shouldSwitch;
+
+    Sequence switchSequence;
 
     void Start()
     {
-        if(toSwitch)
+        if(shouldSwitch)
         {
-            StartCoroutine(Switch());
+            Switch();
         }
     }
 
-    IEnumerator Switch()
+    public void Switch()
     {
-        float time;
-        while(true)
-        {
-            Vector2 first = spikes[0].position;
-            Vector2 second = spikes[1].position;
-            time = 0;
-            while(time < duration)
-            {
-                spikes[0].position = new Vector2(Mathf.Lerp(first.x, second.x, time / duration), spikes[0].position.y);
-                spikes[1].position = new Vector2(Mathf.Lerp(second.x, first.x, time / duration), spikes[1].position.y);
-                time += Time.deltaTime;
-                yield return null;
-            }
-        }
+        float firstX = spikes[0].position.x;
+        float secondX = spikes[1].position.x;
+
+        switchSequence = Sequence.Create()
+            .Group(Tween.PositionX(spikes[0], secondX, duration))
+            .Group(Tween.PositionX(spikes[1], firstX, duration));
+
+        switchSequence.SetRemainingCycles(-1);
+    }
+
+    void OnDisable()
+    {
+        switchSequence.Stop();
     }
 }

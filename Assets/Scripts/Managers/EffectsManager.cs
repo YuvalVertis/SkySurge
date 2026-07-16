@@ -25,14 +25,17 @@ public sealed class EffectsManager : MonoBehaviour
     {
         if (sprite == null) return default;
 
-        return Sequence.Create()
+        Sequence sequence = Sequence.Create()
             .Chain(Tween.Alpha(sprite, 0f, duration, ease))
-            .ChainCallback(() => sprite.gameObject.SetActive(false))
+            .ChainCallback(() => SetColliders(sprite, false))
             .ChainDelay(delay)
-            .ChainCallback(() => sprite.gameObject.SetActive(true))
+            .ChainCallback(() => SetColliders(sprite, true))
             .Chain(Tween.Alpha(sprite, 1f, duration, ease))
-            .ChainDelay(delay)
-            .OnComplete(() => FadeRepeat(sprite, duration, delay, ease));
+            .ChainDelay(delay);
+
+        sequence.SetRemainingCycles(-1);
+
+        return sequence;
     }
 
     public void FadeIn(SpriteRenderer sprite, float duration, bool enableColliders = false, Ease ease = Ease.OutQuad)
@@ -93,5 +96,12 @@ public sealed class EffectsManager : MonoBehaviour
 
         finalValue = Mathf.Clamp(finalValue, 0.01f, 3f);
         Tween.AudioPitch(src, finalValue, duration, ease);
+    }
+
+    public void Spin(Transform target, float duration, int cycles, bool repeat = false, Ease ease = Ease.Linear)
+    {
+        float rotationAmount = 360f * cycles;
+        Tween.Rotation(target, target.eulerAngles + new Vector3(0, 0, rotationAmount), duration, ease).
+            SetRemainingCycles(repeat ? -1 : cycles - 1);
     }
 }

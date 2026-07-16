@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using PrimeTween;
 
 public sealed class Macer : MonoBehaviour
 {
@@ -7,33 +8,18 @@ public sealed class Macer : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(Attack());
+        Attack();
     }
 
-    IEnumerator Attack()
+    public void Attack()
     {
-        while(true)
-        {
-            float time = 0;
-            Vector3 position = transform.position;
-            while (time < duration * 1.5)
-            {
-                transform.position = new Vector2(transform.position.x, Mathf.Lerp(position.y, position.y - 4.61f, time / (duration * 1.5f)));
-                time += Time.deltaTime;
-                yield return null;
-            }
-            transform.position = new Vector2(transform.position.x, position.y - 4.61f);
-            time = 0;
-            yield return new WaitForSeconds(1f);
-            while (time < duration)
-            {
-                transform.position = new Vector2(transform.position.x, Mathf.Lerp(position.y - 4.61f, position.y, time / duration));
-                time += Time.deltaTime;
-                yield return null;
-            }
-            transform.position = new Vector2(transform.position.x, position.y);
-            yield return new WaitForSeconds(0.9f);
+        float startY = transform.position.y;
 
-        }
+        Sequence.Create()
+            .Chain(Tween.PositionY(transform, startY - 4.61f, duration * 1.5f, Ease.Linear))
+            .ChainDelay(1f)
+            .Chain(Tween.PositionY(transform, startY, duration, Ease.OutQuad))
+            .ChainDelay(0.9f)
+            .SetRemainingCycles(-1);
     }
 }

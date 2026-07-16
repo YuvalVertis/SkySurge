@@ -3,41 +3,32 @@ using UnityEngine;
 
 public sealed class Summon : MonoBehaviour
 {
-    [SerializeField] float cooldown;
     [SerializeField] float destroyTime;
     [SerializeField] GameObject spawnObject;
-    float startTime;
-    bool tracker;
+    Coroutine spawnRoutine;
 
-    void Awake()
+    void Start()
     {
-        cooldown = Random.Range(2.5f, 3.5f);
-        startTime = cooldown;
-    }
-
-    void Update()
-    {
-        if (cooldown > 0)
-        {
-            cooldown -= Time.deltaTime;
-        }
-        if (cooldown <= 0 && !tracker)
-        {
-            StartCoroutine(SpawnObject());
-            tracker = true;
-        }
+        spawnRoutine = StartCoroutine(SpawnObject());
     }
 
     IEnumerator SpawnObject()
     {
-        yield return null;
-        Vector2 spawnPosition = new Vector2(transform.position.x, transform.position.y);
-        GameObject newObject = Instantiate(spawnObject, spawnPosition, Quaternion.identity);
-        if (newObject != null)
+        while (true)
         {
+            yield return new WaitForSeconds(Random.Range(2.5f, 3.5f));
+
+            Vector2 spawnPosition = transform.position;
+            GameObject newObject = Instantiate(spawnObject, spawnPosition, Quaternion.identity);
             Destroy(newObject, destroyTime);
         }
-        tracker = false;
-        cooldown = startTime;
+    }
+
+    private void OnDisable()
+    {
+        if (spawnRoutine != null)
+        {
+            StopCoroutine(spawnRoutine);
+        }
     }
 }

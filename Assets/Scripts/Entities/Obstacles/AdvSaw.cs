@@ -1,31 +1,25 @@
-using System.Collections;
 using UnityEngine;
 
 public sealed class AdvSaw : MonoBehaviour
 {
+    [SerializeField] float spinDuration;
     [SerializeField] float moveSpeed;
-    [SerializeField] float rotationSpeed;
     [SerializeField] Transform[] points;
-    [SerializeField] bool rotate;
-    float defaultSpeed;
-    int currentPoint;
     bool movingForward = true;
+    int currentPoint;
 
-    void Awake()
+    void Start()
     {
-        defaultSpeed = moveSpeed;
+        EffectsManager.Instance.Spin(transform, spinDuration, -1);
     }
 
     void Update()
     {
         Vector3 targetPoint = points[currentPoint].position;
         transform.position = Vector3.MoveTowards(transform.position, targetPoint, moveSpeed * Time.deltaTime);
+
         if (Vector3.Distance(transform.position, targetPoint) < 0.1f)
         {
-            if (currentPoint == points.Length / 2 && rotate)
-            {
-                StartCoroutine(Rotate());
-            }
             if (movingForward)
             {
                 currentPoint++;
@@ -43,18 +37,5 @@ public sealed class AdvSaw : MonoBehaviour
                 }
             }
         }
-    }
-    IEnumerator Rotate()
-    {
-        float duration = 0.5f;
-        float time = 0f;
-        moveSpeed = 0;
-        while (time < duration)
-        {
-            transform.Rotate(0, 0, -360 * Time.deltaTime * 3);
-            time += Time.deltaTime;
-            yield return null;
-        }
-        moveSpeed = defaultSpeed;
     }
 }
