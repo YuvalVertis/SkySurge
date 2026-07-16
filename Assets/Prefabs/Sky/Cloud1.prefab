@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4821510862473037502}
   - component: {fileID: 4821510862473037489}
   - component: {fileID: 4821510862473037503}
-  - component: {fileID: 5702223306129710581}
   m_Layer: 6
   m_Name: Cloud1
   m_TagString: Untagged
@@ -131,45 +130,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.9849677, y: 1.4807658}
   m_EdgeRadius: 0
---- !u!68 &5702223306129710581
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4821510862473037488}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -1.6459365, y: 1.2061908}
-  - {x: -0.050089117, y: 1.206648}
-  - {x: 1.5034981, y: 1.206474}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0

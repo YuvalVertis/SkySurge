@@ -27,9 +27,15 @@ public sealed class EffectsManager : MonoBehaviour
 
         Sequence sequence = Sequence.Create()
             .Chain(Tween.Alpha(sprite, 0f, duration, ease))
-            .ChainCallback(() => SetColliders(sprite, false))
+            .ChainCallback(() =>
+            {
+                if (sprite != null) SetColliders(sprite, true);
+            })
             .ChainDelay(delay)
-            .ChainCallback(() => SetColliders(sprite, true))
+            .ChainCallback(() =>
+            {
+                if (sprite != null) SetColliders(sprite, true);
+            })
             .Chain(Tween.Alpha(sprite, 1f, duration, ease))
             .ChainDelay(delay);
 
@@ -46,7 +52,7 @@ public sealed class EffectsManager : MonoBehaviour
         {
             if (sprite == null) return;
 
-            if(enableColliders)
+            if (enableColliders)
             {
                 SetColliders(sprite, true);
             }

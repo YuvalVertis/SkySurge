@@ -24,4 +24,9 @@ public sealed class StartGame : MonoBehaviour
             }
         }
     }
+
+    public void LoadLevel(int index)
+    {
+        SceneManager.LoadScene(index);
+    }
 }

@@ -1,25 +1,34 @@
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine;
+
 public sealed class Player : MonoBehaviour
 {
+    [Header("Movement")]
+    public float moveSpeed;
+    public float maxSpeed;
+    public float jumpSpeed;
+
+    [SerializeField] float acceleration = 30f;
+    [SerializeField] float checkDistance;
+    [SerializeField] float gravityScaleMult;
+    [SerializeField] Transform leftRay;
+    [SerializeField] Transform midRay;
+    [SerializeField] Transform rightRay;
+    [SerializeField] LayerMask checkLayer;
+
+    bool rotated, jumpPreesed, isGrounded, gravityModified, run;
+    float moveX, defaultGravity;
+    public bool fastFall = true;
+    MovePlatform movePlatfrom;
     Rigidbody2D rb;
     Animator anim;
-    MovePlatform movePlatfrom;
-    public float moveSpeed, maxSpeed;
-    public float jumpSpeed;
-    [SerializeField] float acceleration = 30f, checkRadius, gravityScaleMult;
-    [SerializeField] LayerMask checkLayer;
-    Transform checkPos;
-    float moveX, defaultGravity;
-    bool rotated, jumped, grounded, gravityModified, run;
-    public bool fastFall = true;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        checkPos = transform.Find("CheckPos");
-
+        
         if (GameObject.FindGameObjectsWithTag("Cloud").Length > 0)
         {
             movePlatfrom = GameObject.FindWithTag("Cloud").GetComponent<MovePlatform>();
@@ -30,11 +39,8 @@ public sealed class Player : MonoBehaviour
 
     void Update()
     {
+        isGrounded = Check();
         moveX = Input.GetAxisRaw("Horizontal");
-        if(Input.GetKeyDown(KeyCode.Space) && grounded)
-        {
-            jumped = true;
-        }
         if (moveX != 0 && !run)
         {
             anim.SetBool("IsRunning", true);
@@ -47,9 +53,23 @@ public sealed class Player : MonoBehaviour
         }
     }
 
+    public void OnJump(InputValue value)
+    {
+        if(value.isPressed && isGrounded)
+        {
+            jumpPreesed = true;
+        } 
+    }
+
+    bool Check()
+    {
+        return Physics2D.Raycast(leftRay.position, Vector2.down, checkDistance, checkLayer) 
+            || Physics2D.Raycast(midRay.position, Vector2.down, checkDistance, checkLayer) 
+            || Physics2D.Raycast(rightRay.position, Vector2.down, checkDistance, checkLayer);
+    }
+
     void FixedUpdate()
     {
-        grounded = Physics2D.OverlapCircle(checkPos.position, checkRadius, checkLayer);
         if (movePlatfrom == null || !movePlatfrom.clouded)
         {
             rb.AddForce(Vector2.right * moveX * moveSpeed * acceleration, ForceMode2D.Force);
@@ -59,17 +79,17 @@ public sealed class Player : MonoBehaviour
         {
             rb.velocity = new Vector2(moveSpeed * moveX + movePlatfrom.speed, rb.velocity.y);
         }
-        if (jumped)
+        if (jumpPreesed)
         {
             rb.velocity = Vector2.up * jumpSpeed;
-            jumped = false;
+            jumpPreesed = false;
         }
-        if (rb.velocity.y <= 0 && !grounded && !gravityModified)
+        if (rb.velocity.y <= 0 && !isGrounded && !gravityModified)
         {
             rb.gravityScale *= gravityScaleMult; 
             gravityModified = true;
         }
-        if(grounded && fastFall)
+        if(isGrounded && fastFall)
         {
             rb.gravityScale = defaultGravity;
             gravityModified = false;

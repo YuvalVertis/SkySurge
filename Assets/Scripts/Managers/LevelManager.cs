@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using PrimeTween;
 
@@ -5,6 +6,7 @@ public sealed class LevelManager : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] GameObject[] specialClouds;
+    List<Sequence> fadeSequences = new List<Sequence>();
 
     void Start()
     {
@@ -13,15 +15,25 @@ public sealed class LevelManager : MonoBehaviour
             var sprite = item.GetComponent<SpriteRenderer>();
             if(sprite != null)
             {
-                EffectsManager.Instance.FadeRepeat(sprite, 1f, 0.75f, Ease.InOutSine);
+                fadeSequences.Add(EffectsManager.Instance.FadeRepeat(sprite, 1f, 0.75f, Ease.InOutSine));
             }
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    //World border
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player")) return;
-        ScenesHandler.Instance.LoadSceneByIndex(Levels.Levels);
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            ScenesHandler.LoadSceneByIndex(Levels.Levels);
+        }
     }
 
+    void OnDisable()
+    {
+        foreach (var sequence in fadeSequences)
+        {
+            sequence.Stop();
+        }
+    }
 }
