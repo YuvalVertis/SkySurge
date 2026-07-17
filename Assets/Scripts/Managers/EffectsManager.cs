@@ -29,7 +29,7 @@ public sealed class EffectsManager : MonoBehaviour
             .Chain(Tween.Alpha(sprite, 0f, duration, ease))
             .ChainCallback(() =>
             {
-                if (sprite != null) SetColliders(sprite, true);
+                if (sprite != null) SetColliders(sprite, false);
             })
             .ChainDelay(delay)
             .ChainCallback(() =>

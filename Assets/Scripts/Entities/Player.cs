@@ -1,31 +1,31 @@
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 using UnityEngine;
-using UnityEditor;
 
 public sealed class Player : MonoBehaviour
 {
+
     [Header("Movement")]
+    public float acceleration;
     public float moveSpeed;
     public float maxSpeed;
     public float jumpSpeed;
-
-    [SerializeField] float acceleration = 30f;
-    [SerializeField] float checkDistance;
-    [SerializeField] float gravityScaleMult;
+    public float gravityScaleMult;
+    public bool fastFall = true;
+    public InputReader inputHandler;
 
     [Header("Ground Check")]
+    [SerializeField] float rayDistance;
     [SerializeField] Transform leftRay;
     [SerializeField] Transform midRay;
     [SerializeField] Transform rightRay;
-    [SerializeField] LayerMask checkLayer;
-    public bool allowFastFall = true;
-    bool jumpPressed, isGrounded, gravityModified, run;
-    float moveX, defaultGravity;
+    [SerializeField] LayerMask groundLayer;
+
+    bool jumpPressed, isGrounded, run;
+    float direction, defaultGravity;
     MovePlatform movePlatfrom;
+    SpriteRenderer sprite;
     Rigidbody2D rb;
     Animator anim;
-    SpriteRenderer sprite;
 
     void Awake()
     {
@@ -41,20 +41,33 @@ public sealed class Player : MonoBehaviour
         defaultGravity = rb.gravityScale;
     }
 
-    public void OnMove(InputValue value)
+    void OnEnable()
     {
-        moveX = value.Get<float>();
+        inputHandler.OnJump += PlayerJump;
+        inputHandler.OnMove += PlayerMove;
+    }
 
-        if (moveX > 0)
+    void PlayerJump()
+    {
+        if(isGrounded)
+        {
+            jumpPressed = true;
+        }
+    }
+
+    void PlayerMove(float value)
+    {
+        direction = value;
+        if (value > 0)
         {
             sprite.flipX = false;
         }
-        else if (moveX < 0)
+        else if (value < 0)
         {
             sprite.flipX = true;
         }
 
-        bool isMoving = moveX != 0;
+        bool isMoving = value != 0;
         if (isMoving != run)
         {
             anim.SetBool(CodesManager.Run, isMoving);
@@ -62,52 +75,46 @@ public sealed class Player : MonoBehaviour
         }
     }
 
-    public void OnJump(InputValue value)
-    {
-        if (value.isPressed && isGrounded)
-        {
-            jumpPressed = true;
-        }
-    }
-
     bool Check()
     {
-        return Physics2D.Raycast(leftRay.position, Vector2.down, checkDistance, checkLayer)
-            || Physics2D.Raycast(midRay.position, Vector2.down, checkDistance, checkLayer)
-            || Physics2D.Raycast(rightRay.position, Vector2.down, checkDistance, checkLayer);
+        return Physics2D.Raycast(leftRay.position, Vector2.down, rayDistance, groundLayer)
+            || Physics2D.Raycast(midRay.position, Vector2.down, rayDistance, groundLayer)
+            || Physics2D.Raycast(rightRay.position, Vector2.down, rayDistance, groundLayer);
     }
 
     void FixedUpdate()
     {
+        //Ground check with 3 raycasts
         isGrounded = Check();
+
         //Normal movement
         if (movePlatfrom == null || !movePlatfrom.clouded)
         {
-            rb.AddForce(Vector2.right * moveX * moveSpeed * acceleration, ForceMode2D.Force);
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxSpeed, maxSpeed), rb.velocity.y);
+            rb.velocity = new Vector2(moveSpeed * direction, rb.velocity.y);
         }
+
         // OnPlatform
         if (movePlatfrom != null && movePlatfrom.clouded)
         {
-            rb.velocity = new Vector2(moveSpeed * moveX + movePlatfrom.speed, rb.velocity.y);
+            rb.velocity = new Vector2(moveSpeed * direction + movePlatfrom.speed, rb.velocity.y);
         }
-        if (jumpPressed)
+
+        if (jumpPressed && isGrounded)
         {
             rb.velocity = Vector2.up * jumpSpeed;
             jumpPressed = false;
         }
 
-        if (!allowFastFall) return;
+        //Fall
+        if (!fastFall) return;
 
-        if (rb.velocity.y <= 0 && !isGrounded && !gravityModified)
+        if (rb.velocity.y <= 0 && !isGrounded)
         {
-            rb.gravityScale *= gravityScaleMult;
-            gravityModified = true;
+            rb.gravityScale = defaultGravity * gravityScaleMult;
         }
         if (isGrounded)
         {
             rb.gravityScale = defaultGravity;
-            gravityModified = false;
         }
     }
 
@@ -128,7 +135,7 @@ public sealed class Player : MonoBehaviour
         }
         PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel);
         PlayerPrefs.Save();
-        SceneManager.LoadScene("Levels");
+        ScenesHandler.LoadSceneByIndex(Levels.Levels);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -143,7 +150,7 @@ public sealed class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            SceneManager.LoadScene("Levels");
+            ScenesHandler.LoadSceneByIndex(Levels.Levels);
         }
         if (collision.gameObject.CompareTag("Finish"))
         {
@@ -155,8 +162,8 @@ public sealed class Player : MonoBehaviour
     {
         Gizmos.color = Color.green;
 
-        Gizmos.DrawRay(leftRay.position, Vector2.down * checkDistance);
-        Gizmos.DrawRay(midRay.position, Vector2.down * checkDistance);
-        Gizmos.DrawRay(rightRay.position, Vector2.down * checkDistance);
+        Gizmos.DrawRay(leftRay.position, Vector2.down * rayDistance);
+        Gizmos.DrawRay(midRay.position, Vector2.down * rayDistance);
+        Gizmos.DrawRay(rightRay.position, Vector2.down * rayDistance);
     }
 }
