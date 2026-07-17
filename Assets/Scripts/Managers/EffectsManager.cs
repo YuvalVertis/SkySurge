@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using PrimeTween;
 
@@ -56,7 +57,7 @@ public sealed class EffectsManager : MonoBehaviour
             {
                 SetColliders(sprite, true);
             }
-        });
+        }, warnIfTargetDestroyed: false);
     }
 
     public void FadeOut(SpriteRenderer sprite, float duration, bool disableColliders = false, Ease ease = Ease.InQuad)
@@ -71,7 +72,7 @@ public sealed class EffectsManager : MonoBehaviour
             {
                 SetColliders(sprite, false);
             }
-        });
+        }, warnIfTargetDestroyed: false); 
     }
 
     void SetColliders(SpriteRenderer sprite, bool enable)
@@ -104,10 +105,11 @@ public sealed class EffectsManager : MonoBehaviour
         Tween.AudioPitch(src, finalValue, duration, ease);
     }
 
-    public void Spin(Transform target, float duration, int cycles, bool repeat = false, Ease ease = Ease.Linear)
+    public void Spin(Transform target, float duration, bool infinite = false, Ease ease = Ease.Linear, int cycles = 1)
     {
-        float rotationAmount = 360f * cycles;
-        Tween.Rotation(target, target.eulerAngles + new Vector3(0, 0, rotationAmount), duration, ease).
-            SetRemainingCycles(repeat ? -1 : cycles - 1);
+        Vector3 start = target.eulerAngles;
+        Vector3 end = start + new Vector3(0, 0, 360);
+
+        Tween.EulerAngles(target, start, end, duration, ease, infinite ? -1 : cycles);
     }
 }

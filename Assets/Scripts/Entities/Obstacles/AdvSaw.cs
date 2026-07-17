@@ -5,25 +5,28 @@ public sealed class AdvSaw : MonoBehaviour
     [SerializeField] float spinDuration;
     [SerializeField] float moveSpeed;
     [SerializeField] Transform[] points;
+    [SerializeField] Transform spinTransform;
+    [SerializeField] int sawIndex;
     bool movingForward = true;
     int currentPoint;
 
+
     void Start()
     {
-        EffectsManager.Instance.Spin(transform, spinDuration, -1);
+        EffectsManager.Instance.Spin(spinTransform, spinDuration, true);
     }
 
     void Update()
     {
         Vector3 targetPoint = points[currentPoint].position;
-        transform.position = Vector3.MoveTowards(transform.position, targetPoint, moveSpeed * Time.deltaTime);
+        spinTransform.position = Vector3.MoveTowards(spinTransform.position, targetPoint, moveSpeed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, targetPoint) < 0.1f)
+        if (Vector3.Distance(spinTransform.position, targetPoint) < 0.1f)
         {
             if (movingForward)
             {
                 currentPoint++;
-                if (currentPoint == points.Length - 1)
+                if (currentPoint >= points.Length - 1)
                 {
                     movingForward = false;
                 }
@@ -31,11 +34,20 @@ public sealed class AdvSaw : MonoBehaviour
             else
             {
                 currentPoint--;
-                if (currentPoint == 0)
+                if (currentPoint <= 0)
                 {
                     movingForward = true;
                 }
             }
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            var handler = gameObject.GetComponentInParent<SawHandler>();
+            handler.HandleSaws(sawIndex);
         }
     }
 }
