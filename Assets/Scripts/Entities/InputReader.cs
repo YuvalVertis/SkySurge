@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public sealed class InputReader : MonoBehaviour
 {
@@ -7,12 +7,12 @@ public sealed class InputReader : MonoBehaviour
     public event Action OnJump;
     public event Action<float> OnMove;
 
-    private void Awake()
+    void Awake()
     {
         input = new GameActions();
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         input.Enable();
         input.Player.Jump.performed += ctx => OnJump?.Invoke();
@@ -20,7 +20,7 @@ public sealed class InputReader : MonoBehaviour
         input.Player.Move.canceled += ctx => OnMove?.Invoke(0f);
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         input.Disable();
     }

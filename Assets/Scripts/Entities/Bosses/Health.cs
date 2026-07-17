@@ -6,7 +6,7 @@ public sealed class Health : MonoBehaviour
     public float currentHealth;
     private Flash flashScript;
 
-    private void Awake()
+    void Awake()
     {
         currentHealth = maxHealth;
         flashScript = GetComponent<Flash>();
