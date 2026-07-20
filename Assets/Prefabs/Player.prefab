@@ -190,6 +190,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  blinkWaitRange: {x: 6, y: 9}
 --- !u!95 &528433263133782263
 Animator:
   serializedVersion: 5

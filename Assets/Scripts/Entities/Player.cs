@@ -1,5 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.EventSystems;
 
 public sealed class Player : MonoBehaviour
 {
@@ -20,6 +22,10 @@ public sealed class Player : MonoBehaviour
     [SerializeField] Transform rightRay;
     [SerializeField] LayerMask groundLayer;
 
+    [Header("Other")]
+    public Vector2 blinkWaitRange;
+    public bool jumpAnimations;
+
     bool jumpPressed, isGrounded, run;
     float direction, defaultGravity;
     MovePlatform movePlatfrom;
@@ -39,6 +45,7 @@ public sealed class Player : MonoBehaviour
         }
 
         defaultGravity = rb.gravityScale;
+        StartCoroutine(BlinkingRoutine());
     }
 
     void OnEnable()
@@ -47,9 +54,10 @@ public sealed class Player : MonoBehaviour
         inputHandler.OnMove += PlayerMove;
     }
 
+
     void PlayerJump()
     {
-        if(isGrounded)
+        if (isGrounded)
         {
             jumpPressed = true;
         }
@@ -80,6 +88,13 @@ public sealed class Player : MonoBehaviour
         return Physics2D.Raycast(leftRay.position, Vector2.down, rayDistance, groundLayer)
             || Physics2D.Raycast(midRay.position, Vector2.down, rayDistance, groundLayer)
             || Physics2D.Raycast(rightRay.position, Vector2.down, rayDistance, groundLayer);
+    }
+
+    void Update()
+    {
+        if (!jumpAnimations) return;
+        anim.SetBool(CodesManager.IsGrounded, isGrounded);
+        anim.SetFloat(CodesManager.jumpVel, rb.velocity.y);
     }
 
     void FixedUpdate()
@@ -155,6 +170,29 @@ public sealed class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Finish"))
         {
             HandleLevelCompletion();
+        }
+    }
+
+    IEnumerator BlinkingRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => direction == 0);
+
+            float timer = Random.Range(blinkWaitRange.x, blinkWaitRange.y);
+
+            while (timer > 0)
+            {
+                if (direction != 0) break;
+
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+
+            if (direction == 0)
+            {
+                anim.SetTrigger(CodesManager.Blink);
+            }
         }
     }
 
