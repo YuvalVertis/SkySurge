@@ -1,5 +1,5 @@
-using UnityEngine;
 using PrimeTween;
+using UnityEngine;
 
 public sealed class EffectsManager : MonoBehaviour
 {
@@ -44,13 +44,16 @@ public sealed class EffectsManager : MonoBehaviour
         return sequence;
     }
 
-    public void FadeIn(SpriteRenderer sprite, float duration, bool enableColliders = false, Ease ease = Ease.OutQuad)
+    public void FadeIn(SpriteRenderer sprite, float duration, bool enableColliders = false,
+        ChangeActiveState state = ChangeActiveState.NoChange, Ease ease = Ease.OutQuad)
     {
         if (sprite == null) return;
 
         Tween.Alpha(sprite, 1f, duration, ease).OnComplete(() =>
         {
             if (sprite == null) return;
+
+            ActivateByState(true, sprite, state);
 
             if (enableColliders)
             {
@@ -59,7 +62,8 @@ public sealed class EffectsManager : MonoBehaviour
         }, warnIfTargetDestroyed: false);
     }
 
-    public void FadeOut(SpriteRenderer sprite, float duration, bool disableColliders = false, Ease ease = Ease.InQuad)
+    public void FadeOut(SpriteRenderer sprite, float duration, bool disableColliders = false,
+        ChangeActiveState state = ChangeActiveState.NoChange, Ease ease = Ease.InQuad)
     {
         if (sprite == null) return;
 
@@ -67,11 +71,30 @@ public sealed class EffectsManager : MonoBehaviour
         {
             if (sprite == null) return;
 
+            ActivateByState(false, sprite, state);
+
             if (disableColliders)
             {
                 SetColliders(sprite, false);
             }
-        }, warnIfTargetDestroyed: false); 
+        }, warnIfTargetDestroyed: false);
+    }
+
+    public void ActivateByState(bool active, SpriteRenderer sprite, ChangeActiveState state)
+    {
+        if (state == ChangeActiveState.NoChange) return;
+
+        if (state == ChangeActiveState.Change)
+        {
+            sprite.gameObject.SetActive(active);
+        }
+        else if (state == ChangeActiveState.ChangeInParent)
+        {
+            if (sprite.transform.parent != null)
+            {
+                sprite.transform.parent.gameObject.SetActive(active);
+            }
+        }
     }
 
     void SetColliders(SpriteRenderer sprite, bool enable)
@@ -83,7 +106,7 @@ public sealed class EffectsManager : MonoBehaviour
         }
     }
 
-    public void Scale(Transform target, Vector2 newSize, float duration, Ease ease = Ease.OutBack)
+    public void Scale(Transform target, Vector3 newSize, float duration, Ease ease = Ease.OutBack)
     {
         Tween.Scale(target, newSize, duration, ease);
     }
@@ -104,10 +127,12 @@ public sealed class EffectsManager : MonoBehaviour
         Tween.AudioPitch(src, finalValue, duration, ease);
     }
 
-    public void Spin(Transform target, float duration, bool infinite = false, Ease ease = Ease.Linear, int cycles = 1)
+    public Tween Spin(Transform target, float duration, bool infinite = false, Ease ease = Ease.Linear, int cycles = 1)
     {
+        if (target == null) return default;
+
         Vector3 start = target.eulerAngles;
         Vector3 end = start + new Vector3(0, 0, 360);
-        Tween.EulerAngles(target, start, end, duration, ease, infinite ? -1 : cycles);
+        return Tween.EulerAngles(target, start, end, duration, ease, infinite ? -1 : cycles);
     }
 }

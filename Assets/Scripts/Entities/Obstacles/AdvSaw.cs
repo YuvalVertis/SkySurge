@@ -1,5 +1,6 @@
-using UnityEngine;
 using PrimeTween;
+using UnityEngine;
+
 public sealed class AdvSaw : MonoBehaviour
 {
     [SerializeField] float spinDuration;
@@ -9,29 +10,34 @@ public sealed class AdvSaw : MonoBehaviour
     [SerializeField] int sawIndex;
     bool movingForward = true;
     int currentPoint;
+    Tween moveTween;
+    Tween spinTween;
 
-
-    void Start()
+    void OnEnable()
     {
-        if (EffectsManager.Instance != null)
+        if (EffectsManager.Instance != null && spinTransform != null)
         {
-            EffectsManager.Instance.Spin(spinTransform, spinDuration, true);
-
+            spinTween = EffectsManager.Instance.Spin(spinTransform, spinDuration, true);
         }
         MoveSaw();
     }
 
     void MoveSaw()
     {
+        if (points.Length < 2 || spinTransform == null || moveSpeed <= 0) return;
+        if (!gameObject.activeInHierarchy) return;
+
         Vector3 startPos = spinTransform.position;
         Vector3 targetPos = points[currentPoint].position;
 
         float distance = Vector3.Distance(startPos, targetPos);
         float duration = distance / moveSpeed;
 
-        Tween.Position(spinTransform, targetPos, duration, Ease.InOutSine)
+        moveTween = Tween.Position(spinTransform, targetPos, duration, Ease.InOutSine)
             .OnComplete(() =>
             {
+                if (!gameObject.activeInHierarchy) return;
+
                 if (movingForward)
                 {
                     currentPoint++;
@@ -57,7 +63,16 @@ public sealed class AdvSaw : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             var handler = gameObject.GetComponentInParent<SawHandler>();
-            handler.HandleSaws(sawIndex);
+            if (handler != null)
+            {
+                handler.HandleSaws(sawIndex);
+            }
         }
+    }
+
+    void OnDisable()
+    {
+        moveTween.Stop();
+        spinTween.Stop();
     }
 }

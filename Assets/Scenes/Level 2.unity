@@ -1078,7 +1078,7 @@ MonoBehaviour:
   target: {fileID: 1161949649}
   smoothFactor: 2.5
   min: -1.6
-  max: 92.5
+  max: 92
 --- !u!1 &402010233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,7 +1372,7 @@ Transform:
   m_GameObject: {fileID: 540339903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12, y: 0.3125, z: 0}
+  m_LocalPosition: {x: 11.0625, y: 0.3125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4003,7 +4003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3898710975586958800, guid: 766391ff233a6a745982bf360a17c07e, type: 3}
       propertyPath: m_Name
-      value: Saw
+      value: Saw1
       objectReference: {fileID: 0}
     - target: {fileID: 3898710975586958815, guid: 766391ff233a6a745982bf360a17c07e, type: 3}
       propertyPath: m_LocalPosition.x

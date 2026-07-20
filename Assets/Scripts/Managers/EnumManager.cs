@@ -12,3 +12,9 @@ public enum Levels
     Level8
 }
 
+public enum ChangeActiveState
+{
+    NoChange,
+    Change,
+    ChangeInParent
+}

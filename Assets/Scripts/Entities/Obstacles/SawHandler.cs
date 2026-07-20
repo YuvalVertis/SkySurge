@@ -8,7 +8,7 @@ public sealed class SawHandler : MonoBehaviour
     {
         if (saws[index] == null || saws.Length == 0 || EffectsManager.Instance == null) return;
 
-        EffectsManager.Instance.FadeOut(saws[index].GetComponentInChildren<SpriteRenderer>(), 0.75f, true);
+        EffectsManager.Instance.FadeOut(saws[index].GetComponentInChildren<SpriteRenderer>(), 0.75f, false, ChangeActiveState.ChangeInParent);
 
         int nextIndex = index + 2;
         if(nextIndex < saws.Length)
