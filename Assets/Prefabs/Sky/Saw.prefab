@@ -223,8 +223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a6e3b6e6db2f4e4abf24239c3fb7717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spinDuration: 1.5
-  moveSpeed: 2.5
+  spinDuration: 1
+  moveSpeed: 2.8
   points:
   - {fileID: 7574460274153480306}
   - {fileID: 9193035739134655676}

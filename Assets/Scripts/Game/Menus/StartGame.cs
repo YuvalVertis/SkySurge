@@ -20,7 +20,7 @@ public sealed class StartGame : MonoBehaviour
             else
             {
                 buttons[i].interactable = false;
-                buttons[i].GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 255, 255, 100);
+                buttons[i].GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 255, 255, 125);
             }
         }
     }

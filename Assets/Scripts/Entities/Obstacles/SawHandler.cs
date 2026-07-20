@@ -6,7 +6,7 @@ public sealed class SawHandler : MonoBehaviour
 
     public void HandleSaws(int index)
     {
-        if (saws[index] == null || saws.Length == 0) return;
+        if (saws[index] == null || saws.Length == 0 || EffectsManager.Instance == null) return;
 
         EffectsManager.Instance.FadeOut(saws[index].GetComponentInChildren<SpriteRenderer>(), 0.75f, true);
 

@@ -4,18 +4,21 @@ using PrimeTween;
 
 public sealed class LevelManager : MonoBehaviour
 {
-    [SerializeField] Transform target;
-    [SerializeField] GameObject[] specialClouds;
     List<Sequence> fadeSequences = new List<Sequence>();
+    [SerializeField] GameObject[] specialClouds;
+    [SerializeField] float fadeSpeed = 1f;
+    [SerializeField] float delay = 0.75f;
+    [SerializeField] bool allowFade = true;
 
     void Start()
     {
+        if (!allowFade) return;
         foreach (var item in specialClouds)
         {
             var sprite = item.GetComponent<SpriteRenderer>();
             if(sprite != null)
             {
-                fadeSequences.Add(EffectsManager.Instance.FadeRepeat(sprite, 1f, 0.75f, Ease.InOutSine));
+                fadeSequences.Add(EffectsManager.Instance.FadeRepeat(sprite, fadeSpeed, delay, Ease.InOutSine));
             }
         }
     }
@@ -23,7 +26,7 @@ public sealed class LevelManager : MonoBehaviour
     //World border
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("Player") && enabled)
         {
             ScenesHandler.LoadSceneByIndex(Levels.Levels);
         }
@@ -35,5 +38,7 @@ public sealed class LevelManager : MonoBehaviour
         {
             sequence.Stop();
         }
+
+        fadeSequences.Clear();
     }
 }

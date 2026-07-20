@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using PrimeTween;
 public sealed class AdvSaw : MonoBehaviour
 {
     [SerializeField] float spinDuration;
@@ -13,33 +13,43 @@ public sealed class AdvSaw : MonoBehaviour
 
     void Start()
     {
-        EffectsManager.Instance.Spin(spinTransform, spinDuration, true);
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.Spin(spinTransform, spinDuration, true);
+
+        }
+        MoveSaw();
     }
 
-    void Update()
+    void MoveSaw()
     {
-        Vector3 targetPoint = points[currentPoint].position;
-        spinTransform.position = Vector3.MoveTowards(spinTransform.position, targetPoint, moveSpeed * Time.deltaTime);
+        Vector3 startPos = spinTransform.position;
+        Vector3 targetPos = points[currentPoint].position;
 
-        if (Vector3.Distance(spinTransform.position, targetPoint) < 0.1f)
-        {
-            if (movingForward)
+        float distance = Vector3.Distance(startPos, targetPos);
+        float duration = distance / moveSpeed;
+
+        Tween.Position(spinTransform, targetPos, duration, Ease.InOutSine)
+            .OnComplete(() =>
             {
-                currentPoint++;
-                if (currentPoint >= points.Length - 1)
+                if (movingForward)
                 {
-                    movingForward = false;
+                    currentPoint++;
+                    if (currentPoint >= points.Length - 1)
+                    {
+                        movingForward = false;
+                    }
                 }
-            }
-            else
-            {
-                currentPoint--;
-                if (currentPoint <= 0)
+                else
                 {
-                    movingForward = true;
+                    currentPoint--;
+                    if (currentPoint <= 0)
+                    {
+                        movingForward = true;
+                    }
                 }
-            }
-        }
+                MoveSaw();
+            }, warnIfTargetDestroyed: false);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

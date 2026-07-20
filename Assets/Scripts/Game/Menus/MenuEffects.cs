@@ -3,11 +3,13 @@ using System.Collections;
 using UnityEngine;
 public sealed class MenuEffects : MonoBehaviour
 {
-    [SerializeField] Animator anim;
-    [SerializeField] Transform target;
+    [Header("References")]
     [SerializeField] RectTransform background;
+    [SerializeField] Transform target;
+    [SerializeField] Animator anim;
     [SerializeField] float duration;
 
+    [Header("Behaviours")]
     [SerializeField] bool doBlink;
     [SerializeField] bool doLook;
     [SerializeField] bool doParallax;

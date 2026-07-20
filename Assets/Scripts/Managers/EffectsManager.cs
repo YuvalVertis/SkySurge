@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using PrimeTween;
 
@@ -109,7 +108,6 @@ public sealed class EffectsManager : MonoBehaviour
     {
         Vector3 start = target.eulerAngles;
         Vector3 end = start + new Vector3(0, 0, 360);
-
         Tween.EulerAngles(target, start, end, duration, ease, infinite ? -1 : cycles);
     }
 }
