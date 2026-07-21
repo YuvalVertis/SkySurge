@@ -109,9 +109,12 @@ public sealed class EffectsManager : MonoBehaviour
         }
     }
 
-    public void Scale(Transform target, Vector3 newSize, float duration, Ease ease = Ease.OutBack)
+    public Tween Scale(Transform target, Vector3 newSize, float duration, bool repeat = false, Ease ease = Ease.OutBack)
     {
-        Tween.Scale(target, newSize, duration, ease);
+        if (target == null) return default;
+
+        int cycles = repeat ? -1 : 1;
+        return Tween.Scale(target, newSize, duration, ease, cycles, CycleMode.Rewind);
     }
 
     public void FadeVolume(AudioSource src, float finalValue, float duration, Ease ease = Ease.OutQuad)
@@ -130,7 +133,8 @@ public sealed class EffectsManager : MonoBehaviour
         Tween.AudioPitch(src, finalValue, duration, ease);
     }
 
-    public Tween Spin(Transform target, float duration, bool infinite = false, Ease ease = Ease.Linear, int cycles = 1)
+    public Tween Spin(Transform target, float duration, bool infinite = false,
+        Ease ease = Ease.Linear, int cycles = 1)
     {
         if (target == null) return default;
 

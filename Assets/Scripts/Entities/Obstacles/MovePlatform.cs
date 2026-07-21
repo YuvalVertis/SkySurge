@@ -3,42 +3,42 @@ using UnityEngine;
 public sealed class MovePlatform : MonoBehaviour
 {
     [SerializeField] Transform[] points;
-    public float moveSpeed;
-    public float speed;
-    public bool clouded = false;
+    public float moveSpeed = 3f;
     int currentPoint;
+
+    public Vector2 velocity { get; private set; }
+    private Rigidbody2D rb;
 
     void Awake()
     {
-        speed = -moveSpeed;
+        rb = GetComponent<Rigidbody2D>();
     }
-    void Update()
+
+    void FixedUpdate()
     {
         Move();
     }
+
     void Move()
     {
-        if (points.Length == 0)
+        if (points == null || points.Length < 2)
         {
+            velocity = Vector2.zero;
             return;
         }
-        Vector2 moveDirection = new Vector2(points[currentPoint].position.x, 0).normalized;
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
-        if (Vector3.Distance(transform.position, points[currentPoint].position) < 0.1f)
+
+        Vector2 currentPos = rb.position;
+        Vector2 targetPos = points[currentPoint].position;
+
+        Vector2 direction = (targetPos - currentPos).normalized;
+        velocity = direction * moveSpeed;
+
+        Vector2 nextPos = Vector2.MoveTowards(currentPos, targetPos, moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(nextPos);
+
+        if (Vector2.Distance(currentPos, targetPos) < 0.05f)
         {
             currentPoint = (currentPoint + 1) % points.Length;
-            speed *= -1;
         }
-    }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!collision.gameObject.CompareTag("Player")) return;
-        clouded = true;
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (!collision.gameObject.CompareTag("Player")) return;
-        clouded = false;
     }
 }

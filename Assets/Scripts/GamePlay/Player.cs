@@ -6,6 +6,8 @@ public sealed class Player : MonoBehaviour
 {
     [Header("Horiznotal Movement")]
     public float moveSpeed;
+    private bool onPlatform;
+    private MovePlatform activePlatform;
 
     [Header("Jump Logic")]
     public float jumpSpeed;
@@ -44,6 +46,7 @@ public sealed class Player : MonoBehaviour
 
     void OnEnable()
     {
+        if (inputHandler == null) return;
         inputHandler.OnJump += PlayerJump;
         inputHandler.OnMove += PlayerMove;
     }
@@ -91,6 +94,7 @@ public sealed class Player : MonoBehaviour
 
 
         if (!allowJumpAnim) return;
+        anim.SetBool("JumpAnim", allowJumpAnim);
         anim.SetBool(CodesManager.IsGrounded, isGrounded);
         anim.SetFloat(CodesManager.JumpVel, rb.velocity.y);
     }
@@ -100,7 +104,20 @@ public sealed class Player : MonoBehaviour
         //Ground check with 3 raycasts
         isGrounded = Check();
 
-        rb.velocity = new Vector2(moveSpeed * direction, rb.velocity.y);
+        float targetSpeedX = moveSpeed * direction;
+        float targetSpeedY = rb.velocity.y;
+
+        if (onPlatform && activePlatform != null)
+        {
+            targetSpeedX += activePlatform.velocity.x;
+
+            if (activePlatform.velocity.y < 0f && isGrounded)
+            {
+                targetSpeedY = activePlatform.velocity.y;
+            }
+        }
+
+        rb.velocity = new Vector2(targetSpeedX, targetSpeedY);
 
         if (jumpBufferCounter > 0f && isGrounded)
         {
@@ -150,6 +167,27 @@ public sealed class Player : MonoBehaviour
         else if (collision.gameObject.CompareTag("Finish"))
         {
             HandleLevelCompletion();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<MovePlatform>(out MovePlatform platform))
+        {
+            activePlatform = platform;
+            onPlatform = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<MovePlatform>(out MovePlatform platform))
+        {
+            if (activePlatform == platform)
+            {
+                activePlatform = null;
+                onPlatform = false;
+            }
         }
     }
 

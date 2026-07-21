@@ -180,7 +180,7 @@ MonoBehaviour:
   jumpSpeed: 9
   gravityScaleMult: 1.2
   fastFall: 1
-  inputHandler: {fileID: 3961385781791065166}
+  jumpBufferTimer: 0.1
   rayDistance: 0.18
   leftRay: {fileID: 4377679094898474704}
   midRay: {fileID: 9146912936775157994}
@@ -188,6 +188,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  inputHandler: {fileID: 3961385781791065166}
   blinkWaitRange: {x: 6, y: 9}
   allowJumpAnim: 0
 --- !u!95 &528433263133782263

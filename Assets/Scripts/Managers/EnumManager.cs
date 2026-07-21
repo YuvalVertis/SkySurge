@@ -18,3 +18,9 @@ public enum ChangeActiveState
     Change,
     ChangeInParent
 }
+
+public enum SfxType
+{
+    None
+}
+
