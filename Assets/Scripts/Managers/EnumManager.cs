@@ -24,3 +24,14 @@ public enum SfxType
     None
 }
 
+public enum BossStates
+{
+    Intro,
+    Idle,
+    Chase,
+    Attack,
+    Rage,
+    Flee,
+    Die
+}
+

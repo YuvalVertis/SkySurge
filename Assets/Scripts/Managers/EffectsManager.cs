@@ -61,12 +61,12 @@ public sealed class EffectsManager : MonoBehaviour
         }, warnIfTargetDestroyed: false);
     }
 
-    public void FadeOut(SpriteRenderer sprite, float duration, bool disableColliders = false,
+    public Tween FadeOut(SpriteRenderer sprite, float duration, bool disableColliders = false,
         ChangeActiveState state = ChangeActiveState.NoChange, Ease ease = Ease.InQuad)
     {
-        if (sprite == null) return;
+        if (sprite == null) return default;
 
-        Tween.Alpha(sprite, 0f, duration, ease).OnComplete(() =>
+        return Tween.Alpha(sprite, 0f, duration, ease).OnComplete(() =>
         {
             if (sprite == null) return;
 
@@ -77,6 +77,13 @@ public sealed class EffectsManager : MonoBehaviour
                 SetColliders(sprite, false);
             }
         }, warnIfTargetDestroyed: false);
+    }
+
+    public Tween InterpolateColor(SpriteRenderer sprite, Color newColor, float duration, Ease ease = Ease.Linear)
+    {
+        if (sprite == null) return default;
+
+        return Tween.Color(sprite, newColor, duration, ease);
     }
 
     public void ActivateByState(bool active, SpriteRenderer sprite, ChangeActiveState state)

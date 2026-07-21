@@ -1,10 +1,12 @@
+using System;
 using UnityEngine;
 
 public sealed class Health : MonoBehaviour
 {
-    public float maxHealth;
-    public float currentHealth;
+    public event Action OnDeath;
     public Flash flashScript;
+    public float currentHealth;
+    public float maxHealth;
 
     void Awake()
     {
@@ -25,13 +27,8 @@ public sealed class Health : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            Die();
+            OnDeath?.Invoke();
         }
-    }
-
-    public void Die()
-    {
-
     }
 
     public void Heal(float health)
