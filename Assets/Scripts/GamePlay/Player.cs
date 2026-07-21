@@ -45,10 +45,7 @@ public sealed class Player : MonoBehaviour
 
     void PlayerJump()
     {
-        if (isGrounded)
-        {
-            jumpPressed = true;
-        }
+        jumpPressed = true;
     }
 
     void PlayerMove(float value)
@@ -73,6 +70,8 @@ public sealed class Player : MonoBehaviour
 
     bool Check()
     {
+        if (leftRay == null || midRay == null || rightRay == null) return false;
+
         return Physics2D.Raycast(leftRay.position, Vector2.down, rayDistance, groundLayer)
             || Physics2D.Raycast(midRay.position, Vector2.down, rayDistance, groundLayer)
             || Physics2D.Raycast(rightRay.position, Vector2.down, rayDistance, groundLayer);
@@ -92,9 +91,12 @@ public sealed class Player : MonoBehaviour
 
         rb.velocity = new Vector2(moveSpeed * direction, rb.velocity.y);
 
-        if (jumpPressed && isGrounded)
+        if (jumpPressed)
         {
-            rb.velocity = Vector2.up * jumpSpeed;
+            if(isGrounded)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            }
             jumpPressed = false;
         }
 
@@ -166,5 +168,13 @@ public sealed class Player : MonoBehaviour
                 anim.SetTrigger(CodesManager.Blink);
             }
         }
+    }
+
+    void OnDisable()
+    {
+        if (inputHandler == null) return;
+
+        inputHandler.OnJump -= PlayerJump;
+        inputHandler.OnMove -= PlayerMove;
     }
 }

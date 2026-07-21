@@ -44,8 +44,11 @@ TagManager:
   - name: BackGround
     uniqueID: 1215350011
     locked: 0
-  - name: EndLevel
-    uniqueID: 832958405
+  - name: Characters
+    uniqueID: 878773299
+    locked: 0
+  - name: ForeGround
+    uniqueID: 1466882745
     locked: 0
   - name: Default
     uniqueID: 0
