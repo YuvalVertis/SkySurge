@@ -15,7 +15,7 @@ public sealed class EffectsManager : MonoBehaviour
         Instance = this;
     }
 
-    public void FadeEffect(SpriteRenderer sprite, float duration, float alpha, Ease ease = Ease.OutQuad)
+    public void Fade(SpriteRenderer sprite, float duration, float alpha, Ease ease = Ease.OutQuad)
     {
         if (sprite == null) return;
         Tween.Alpha(sprite, alpha, duration, ease);
@@ -40,7 +40,6 @@ public sealed class EffectsManager : MonoBehaviour
             .ChainDelay(delay);
 
         sequence.SetRemainingCycles(-1);
-
         return sequence;
     }
 
@@ -82,18 +81,22 @@ public sealed class EffectsManager : MonoBehaviour
 
     public void ActivateByState(bool active, SpriteRenderer sprite, ChangeActiveState state)
     {
-        if (state == ChangeActiveState.NoChange) return;
+        switch (state)
+        {
+            case ChangeActiveState.NoChange:
+                return;
 
-        if (state == ChangeActiveState.Change)
-        {
-            sprite.gameObject.SetActive(active);
-        }
-        else if (state == ChangeActiveState.ChangeInParent)
-        {
-            if (sprite.transform.parent != null)
-            {
-                sprite.transform.parent.gameObject.SetActive(active);
-            }
+            case ChangeActiveState.Change:
+                sprite.gameObject.SetActive(active);
+                break;
+
+            case ChangeActiveState.ChangeInParent:
+                Transform parent = sprite.transform.parent;
+                if (parent != null)
+                {
+                    parent.gameObject.SetActive(active);
+                }
+                break;
         }
     }
 

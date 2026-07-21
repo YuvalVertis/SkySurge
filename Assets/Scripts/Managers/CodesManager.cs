@@ -3,7 +3,7 @@ using UnityEngine;
 public static class CodesManager
 {
     public static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
-    public static readonly int jumpVel = Animator.StringToHash("JumpVel");
+    public static readonly int JumpVel = Animator.StringToHash("JumpVel");
     public static readonly int Speed = Animator.StringToHash("Speed");
     public static readonly int Blink = Animator.StringToHash("Blink");
     public static readonly int Jump = Animator.StringToHash("Jump");

@@ -1,19 +1,22 @@
 using PrimeTween;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class AdvSaw : MonoBehaviour
 {
+    [Header("Saw Settings")]
     [SerializeField] float spinDuration;
     [SerializeField] float moveSpeed;
     [SerializeField] Transform[] points;
     [SerializeField] Transform spinTransform;
     [SerializeField] int sawIndex;
+
     bool movingForward = true;
     int currentPoint;
     Tween moveTween;
     Tween spinTween;
 
-    void OnEnable()
+    void Start()
     {
         if (EffectsManager.Instance != null && spinTransform != null)
         {
@@ -62,7 +65,7 @@ public sealed class AdvSaw : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            var handler = gameObject.GetComponentInParent<SawHandler>();
+            var handler = GetComponentInParent<SawHandler>();
             if (handler != null)
             {
                 handler.HandleSaws(sawIndex);

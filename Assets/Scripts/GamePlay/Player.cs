@@ -1,15 +1,11 @@
 using UnityEngine.SceneManagement;
-using UnityEngine;
 using System.Collections;
-using UnityEngine.EventSystems;
+using UnityEngine;
 
 public sealed class Player : MonoBehaviour
 {
-
     [Header("Movement")]
-    public float acceleration;
     public float moveSpeed;
-    public float maxSpeed;
     public float jumpSpeed;
     public float gravityScaleMult;
     public bool fastFall = true;
@@ -24,11 +20,10 @@ public sealed class Player : MonoBehaviour
 
     [Header("Other")]
     public Vector2 blinkWaitRange;
-    public bool jumpAnimations;
+    public bool allowJumpAnim;
 
     bool jumpPressed, isGrounded, run;
     float direction, defaultGravity;
-    MovePlatform movePlatfrom;
     SpriteRenderer sprite;
     Rigidbody2D rb;
     Animator anim;
@@ -38,14 +33,8 @@ public sealed class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
-
-        if (GameObject.FindGameObjectsWithTag("Cloud").Length > 0)
-        {
-            movePlatfrom = GameObject.FindWithTag("Cloud").GetComponent<MovePlatform>();
-        }
-
-        defaultGravity = rb.gravityScale;
         StartCoroutine(BlinkingRoutine());
+        defaultGravity = rb.gravityScale;
     }
 
     void OnEnable()
@@ -53,7 +42,6 @@ public sealed class Player : MonoBehaviour
         inputHandler.OnJump += PlayerJump;
         inputHandler.OnMove += PlayerMove;
     }
-
 
     void PlayerJump()
     {
@@ -92,9 +80,9 @@ public sealed class Player : MonoBehaviour
 
     void Update()
     {
-        if (!jumpAnimations) return;
+        if (!allowJumpAnim) return;
         anim.SetBool(CodesManager.IsGrounded, isGrounded);
-        anim.SetFloat(CodesManager.jumpVel, rb.velocity.y);
+        anim.SetFloat(CodesManager.JumpVel, rb.velocity.y);
     }
 
     void FixedUpdate()
@@ -102,17 +90,7 @@ public sealed class Player : MonoBehaviour
         //Ground check with 3 raycasts
         isGrounded = Check();
 
-        //Normal movement
-        if (movePlatfrom == null || !movePlatfrom.clouded)
-        {
-            rb.velocity = new Vector2(moveSpeed * direction, rb.velocity.y);
-        }
-
-        // OnPlatform
-        if (movePlatfrom != null && movePlatfrom.clouded)
-        {
-            rb.velocity = new Vector2(moveSpeed * direction + movePlatfrom.speed, rb.velocity.y);
-        }
+        rb.velocity = new Vector2(moveSpeed * direction, rb.velocity.y);
 
         if (jumpPressed && isGrounded)
         {
@@ -121,6 +99,11 @@ public sealed class Player : MonoBehaviour
         }
 
         //Fall
+        FallLogic();
+    }
+
+    void FallLogic()
+    {
         if (!fastFall) return;
 
         if (rb.velocity.y <= 0 && !isGrounded)
@@ -135,30 +118,17 @@ public sealed class Player : MonoBehaviour
 
     void HandleLevelCompletion()
     {
+        int currentLevel = SceneManager.GetActiveScene().buildIndex - 1;
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
-        if (unlockedLevel == 8)
-        {
-            unlockedLevel = 1;
-        }
-        else
-        {
-            int currentLevel = SceneManager.GetActiveScene().buildIndex - 1;
-            if (currentLevel == unlockedLevel)
-            {
-                unlockedLevel++;
-            }
-        }
-        PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel);
-        PlayerPrefs.Save();
-        ScenesHandler.LoadSceneByIndex(Levels.Levels);
-    }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Finish"))
+        if (currentLevel == unlockedLevel && unlockedLevel < 8)
         {
-            HandleLevelCompletion();
+            unlockedLevel++;
+            PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel);
+            PlayerPrefs.Save();
         }
+
+        ScenesHandler.LoadSceneByIndex(Levels.Levels);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -167,7 +137,7 @@ public sealed class Player : MonoBehaviour
         {
             ScenesHandler.LoadSceneByIndex(Levels.Levels);
         }
-        if (collision.gameObject.CompareTag("Finish"))
+        else if (collision.gameObject.CompareTag("Finish"))
         {
             HandleLevelCompletion();
         }
@@ -177,10 +147,12 @@ public sealed class Player : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitUntil(() => direction == 0);
+            while (direction != 0)
+            {
+                yield return null;
+            }
 
             float timer = Random.Range(blinkWaitRange.x, blinkWaitRange.y);
-
             while (timer > 0)
             {
                 if (direction != 0) break;
@@ -194,14 +166,5 @@ public sealed class Player : MonoBehaviour
                 anim.SetTrigger(CodesManager.Blink);
             }
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-
-        Gizmos.DrawRay(leftRay.position, Vector2.down * rayDistance);
-        Gizmos.DrawRay(midRay.position, Vector2.down * rayDistance);
-        Gizmos.DrawRay(rightRay.position, Vector2.down * rayDistance);
     }
 }
