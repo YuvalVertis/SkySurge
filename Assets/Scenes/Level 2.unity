@@ -1078,7 +1078,7 @@ MonoBehaviour:
   target: {fileID: 1161949649}
   smoothFactor: 2.5
   min: -1.6
-  max: 92
+  max: 90
 --- !u!1 &402010233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,7 +1372,7 @@ Transform:
   m_GameObject: {fileID: 540339903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.0625, y: 0.3125, z: 0}
+  m_LocalPosition: {x: 10.125, y: 0.3125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2066,6 +2066,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 528433263133782261, guid: 608482a3f30564945bdcb18200240962, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782261, guid: 608482a3f30564945bdcb18200240962, type: 3}

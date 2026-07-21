@@ -4,12 +4,16 @@ using UnityEngine;
 
 public sealed class Player : MonoBehaviour
 {
-    [Header("Movement")]
+    [Header("Horiznotal Movement")]
     public float moveSpeed;
+
+    [Header("Jump Logic")]
     public float jumpSpeed;
     public float gravityScaleMult;
     public bool fastFall = true;
-    public InputReader inputHandler;
+    public float jumpBufferTimer = 0.1f;
+    float jumpBufferCounter;
+
 
     [Header("Ground Check")]
     [SerializeField] float rayDistance;
@@ -19,10 +23,11 @@ public sealed class Player : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
 
     [Header("Other")]
+    public InputReader inputHandler;
     public Vector2 blinkWaitRange;
     public bool allowJumpAnim;
 
-    bool jumpPressed, isGrounded, run;
+    bool isGrounded, run;
     float direction, defaultGravity;
     SpriteRenderer sprite;
     Rigidbody2D rb;
@@ -45,7 +50,7 @@ public sealed class Player : MonoBehaviour
 
     void PlayerJump()
     {
-        jumpPressed = true;
+        jumpBufferCounter = jumpBufferTimer;
     }
 
     void PlayerMove(float value)
@@ -79,6 +84,12 @@ public sealed class Player : MonoBehaviour
 
     void Update()
     {
+        if(jumpBufferCounter > 0)
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+
+
         if (!allowJumpAnim) return;
         anim.SetBool(CodesManager.IsGrounded, isGrounded);
         anim.SetFloat(CodesManager.JumpVel, rb.velocity.y);
@@ -91,13 +102,10 @@ public sealed class Player : MonoBehaviour
 
         rb.velocity = new Vector2(moveSpeed * direction, rb.velocity.y);
 
-        if (jumpPressed)
+        if (jumpBufferCounter > 0f && isGrounded)
         {
-            if(isGrounded)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-            }
-            jumpPressed = false;
+            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            jumpBufferCounter = 0f; 
         }
 
         //Fall
@@ -149,7 +157,7 @@ public sealed class Player : MonoBehaviour
     {
         while (true)
         {
-            while (direction != 0)
+            while (direction != 0 || !isGrounded)
             {
                 yield return null;
             }
@@ -157,16 +165,17 @@ public sealed class Player : MonoBehaviour
             float timer = Random.Range(blinkWaitRange.x, blinkWaitRange.y);
             while (timer > 0)
             {
-                if (direction != 0) break;
+                if (direction != 0 || !isGrounded) break;
 
                 timer -= Time.deltaTime;
                 yield return null;
             }
 
-            if (direction == 0)
+            if (direction == 0 && isGrounded)
             {
                 anim.SetTrigger(CodesManager.Blink);
             }
+            yield return null;
         }
     }
 
