@@ -23,9 +23,7 @@ public sealed class MenuEffects : MonoBehaviour
 
     IEnumerator Blink()
     {
-        if (!doBlink) yield return null;
-
-        while (true)
+        while (doBlink)
         {
             yield return new WaitForSeconds(Random.Range(6f, 11f));
             anim?.SetBool(CodesManager.Blink, true);

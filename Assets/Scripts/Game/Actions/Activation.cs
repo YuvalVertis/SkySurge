@@ -10,12 +10,12 @@ public sealed class Activation : MonoBehaviour
 
     [Header("Behaviour")]
     [SerializeField] bool destroyObjects;
-    [SerializeField] bool alwaysActivate;
+    [SerializeField] bool repeatActivation;
     bool activated;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && (!activated || alwaysActivate))
+        if (collision.CompareTag("Player") && (!activated || repeatActivation))
         {
             ActivationCollision();
         }
@@ -23,7 +23,7 @@ public sealed class Activation : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && (!activated || alwaysActivate))
+        if (collision.gameObject.CompareTag("Player") && (!activated || repeatActivation))
         {
             ActivationCollision();
         }

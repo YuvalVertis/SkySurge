@@ -4,20 +4,41 @@ public sealed class Health : MonoBehaviour
 {
     public float maxHealth;
     public float currentHealth;
-    private Flash flashScript;
+    public Flash flashScript;
 
     void Awake()
     {
         currentHealth = maxHealth;
-        flashScript = GetComponent<Flash>();
     }
 
     public void TakeDamage(float damage)
     {
+        if (damage <= 0 || currentHealth <= 0) return;
+
         currentHealth -= damage;
-        if (flashScript != null) 
+
+        if (flashScript != null)
         {
-            StartCoroutine(flashScript.FlashEffect()); 
+            StartCoroutine(flashScript.FlashEffect());
         }
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+
+    }
+
+    public void Heal(float health)
+    {
+        if (health <= 0 || currentHealth <= 0) return;
+
+        float newHealth = currentHealth + health;
+        currentHealth = (newHealth < maxHealth) ? newHealth : maxHealth;
     }
 }
