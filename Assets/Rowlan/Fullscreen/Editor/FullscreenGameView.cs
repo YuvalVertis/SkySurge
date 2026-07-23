@@ -116,12 +116,6 @@ namespace Rowlan.Fullscreen
                 return;
             }
 
-            if (ShowToolbarProperty == null)
-            {
-                Debug.LogWarning("[Fullscreen] GameView.showToolbar not found. " +
-                                 "Play toolbar may remain visible. Requires Unity 6.000.40+.");
-            }
-
             if (IsFullscreen)
                 ExitFullscreen();
             else
@@ -206,10 +200,6 @@ namespace Rowlan.Fullscreen
 
             // Platform-specific: detect correct monitor via OS APIs and cover it fully
             FullscreenPlatform.OnEnterFullscreen(fullscreenInstance);
-
-            if (FullscreenSettings.DebugLogging)
-                Debug.Log($"[Fullscreen] Entered (containerPos={containerRect}). " +
-                          $"Press {FullscreenSettings.ToggleKey} or {FullscreenSettings.ExitKey} to exit.");
         }
 
         /// <summary>
@@ -247,9 +237,6 @@ namespace Rowlan.Fullscreen
 
             // Restore original cursor visibility
             RestoreCursorVisibility();
-
-            if (FullscreenSettings.DebugLogging)
-                Debug.Log("[Fullscreen] Exited fullscreen.");
         }
 
         /// <summary>

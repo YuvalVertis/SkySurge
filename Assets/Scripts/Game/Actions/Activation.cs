@@ -4,7 +4,6 @@ public sealed class Activation : MonoBehaviour
 {
     [Header("Active Objects")]
     [SerializeField] GameObject[] activeObjects;
-
     [Header("Inactive Objects")]
     [SerializeField] GameObject[] inactiveObjects;
 

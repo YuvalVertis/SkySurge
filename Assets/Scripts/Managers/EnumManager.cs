@@ -1,4 +1,4 @@
-public enum Levels
+public enum Levels : byte
 {
     Menu,
     Levels,
@@ -12,19 +12,19 @@ public enum Levels
     Level8
 }
 
-public enum ChangeActiveState
+public enum ChangeActiveState : byte
 {
     NoChange,
     Change,
     ChangeInParent
 }
 
-public enum SfxType
+public enum SfxType : byte
 {
     None
 }
 
-public enum BossStates
+public enum BossStates : byte
 {
     Intro,
     Idle,

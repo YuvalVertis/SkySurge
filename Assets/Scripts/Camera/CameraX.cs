@@ -12,11 +12,11 @@ public sealed class CameraX : MonoBehaviour
     {
         Follow();
     }
- 
+
     void Follow()
     {
         float targetX = Mathf.Clamp(target.position.x + offset.x, min, max);
-        float smoothedX = Mathf.Lerp(transform.position.x, targetX, smoothFactor * Time.deltaTime); 
+        float smoothedX = Mathf.Lerp(transform.position.x, targetX, smoothFactor * Time.deltaTime);
 
         //Only follow in the x direction.
         transform.position = new Vector3(smoothedX, transform.position.y, transform.position.z);

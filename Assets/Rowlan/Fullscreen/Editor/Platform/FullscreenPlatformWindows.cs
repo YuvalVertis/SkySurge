@@ -140,10 +140,6 @@ namespace Rowlan.Fullscreen
                             targetY = mi.rcMonitor.top;
                             targetW = mi.rcMonitor.right - mi.rcMonitor.left;
                             targetH = mi.rcMonitor.bottom - mi.rcMonitor.top;
-
-                            if (FullscreenSettings.DebugLogging)
-                                Debug.Log($"[Fullscreen/Win] MonitorFromWindow: " +
-                                          $"origin=({targetX},{targetY}), size={targetW}x{targetH}");
                         }
                     }
 

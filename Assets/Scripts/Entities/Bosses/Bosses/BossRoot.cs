@@ -2,13 +2,14 @@ using UnityEngine;
 
 public abstract class BossRoot : MonoBehaviour
 {
-    //Abstract class:
-    // All classes that inherrit must implement all abstract methods
+    // Abstract class:
+    // All classes that inherit must implement all abstract methods.
     // can't create objects 
 
     [SerializeField] protected BossStates currentState = BossStates.Intro;
     public BossStates CurrentState => currentState;
 
+    protected float stateTimer;
     protected Health health;
 
     protected virtual void Start()
@@ -18,8 +19,6 @@ public abstract class BossRoot : MonoBehaviour
         {
             health.OnDeath += HandleDeath;
         }
-
-
     }
 
     protected virtual void HandleDeath()
@@ -27,6 +26,19 @@ public abstract class BossRoot : MonoBehaviour
         SetState(BossStates.Die);
     }
 
+    public virtual void SetState(BossStates newState)
+    {
+        if (currentState == newState) return;
+
+        currentState = newState;
+        stateTimer = 0;
+    }
+    
+    /// <summary>
+    /// Controls states transitions [Must implement].
+    /// </summary>
+    public abstract void StateLogic();
+    
     protected virtual void OnDestroy()
     {
         if (health != null)
@@ -34,21 +46,4 @@ public abstract class BossRoot : MonoBehaviour
             health.OnDeath -= HandleDeath;
         }
     }
-
-    public virtual void SetState(BossStates newState)
-    {
-        if (currentState == newState) return;
-
-        currentState = newState;
-    }
-
-    public abstract void StateLogic();
-
-    public virtual void Intro() { }
-    public virtual void Idle() { }
-    public virtual void Chase() { }
-    public virtual void Attack() { }
-    public virtual void Rage() { }
-    public virtual void Flee() { }
-    public virtual void Die() { }
 }

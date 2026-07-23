@@ -42,4 +42,22 @@ public static class ScenesHandler
         LoadSceneByIndex(Levels.Levels);
     }
 
+    public static void NextLevel()
+    {
+        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+
+        if(unlockedLevel >= 8 || unlockedLevel < 0)
+        {
+            return;
+        }
+
+        int currentLevel = SceneManager.GetActiveScene().buildIndex - 1;
+
+        if (currentLevel == unlockedLevel)
+        {
+            unlockedLevel++;
+            PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel);
+            PlayerPrefs.Save();
+        }
+    }
 }

@@ -1,4 +1,5 @@
 using UnityEngine.Rendering.Universal;
+using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine;
 using PrimeTween;
@@ -10,58 +11,41 @@ public class Boss1 : BossRoot
     [SerializeField] Transform ground;
     [SerializeField] float moveSpeed;
     [SerializeField] float attackCooldown;
+    [SerializeField] Vector2 walkRangeX;
 
     [Header("Visuals")]
     [SerializeField] Volume volume;
-    [SerializeField] SpriteRenderer[] spriteRenderers;
-    [SerializeField] Vector2 xRange;
 
-    SpriteRenderer sr;
+    [Header("Features")]
+    [SerializeField] RandomSpawn maceSpawner;
+    [SerializeField] float rageEnteryHp;
+
+    bool inRage, inAttack, hasDied;
+    List<SpriteRenderer> sprites = new();
+    EffectsManager instance = EffectsManager.Instance;
     Rigidbody2D rb;
-    float attackTimer, attackDuration, targetY;
-    bool isAttacking, inRageIntro, end, died;
 
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        sr = gameObject.GetComponent<SpriteRenderer>();
-        health = GetComponent<Health>();
-        attackTimer = attackCooldown;
-    }
 
-    void FixedUpdate()
-    {
-        if(!inRageIntro && !died)
-        {
-            Follow();
-        }
+        GetComponentsInChildren<SpriteRenderer>(sprites);
+        health = GetComponent<Health>();
     }
 
     void Update()
     {
+        stateTimer += Time.deltaTime;
         StateLogic();
+    }
 
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime; 
-        }
+    void FixedUpdate()
+    {
+        if (target == null || rb == null) return;
 
-        if (attackTimer <= 0)
+        if (currentState == BossStates.Chase)
         {
-            attackTimer = 0;
-            if(health.currentHealth > 4)
-            {
-                SetState(BossStates.Attack);  
-            }
-            if(health.currentHealth <= 4 && end)
-            {
-                SetState(BossStates.Attack);
-            }
-        }
-
-        if(health.currentHealth <= 4 && !inRageIntro && isAttacking)
-        {
-            SetState(BossStates.Rage);
+            Chase();
         }
     }
 
@@ -69,13 +53,11 @@ public class Boss1 : BossRoot
     {
         switch (currentState)
         {
-            case BossStates.Idle:
-                break;
             case BossStates.Attack:
                 Attack();
                 break;
             case BossStates.Rage:
-                RageAttack();
+                RageIntro();
                 break;
             case BossStates.Die:
                 Die();
@@ -83,106 +65,135 @@ public class Boss1 : BossRoot
         }
     }
 
-    void Follow()
+    void Chase()
     {
-        Vector2 direction = new Vector2(target.position.x - transform.position.x, 0f).normalized;
-        if (Mathf.Abs(target.position.x - transform.position.x) > 0.1f && attackCooldown > 0)
+        float distance = target.position.x - transform.position.x;
+        if (stateTimer < attackCooldown)
         {
-            Vector2 newPosition = rb.position + direction * moveSpeed * Time.deltaTime;
-            newPosition.x = Mathf.Clamp(newPosition.x, xRange.x, xRange.y);
-            rb.MovePosition(newPosition);
-        } 
+            if (Mathf.Abs(distance) > 0.05f)
+            {
+                float direction = Mathf.Sign(distance);
+                float newPos = rb.position.x + direction * moveSpeed * Time.deltaTime;
+
+                newPos = Mathf.Clamp(newPos, walkRangeX.x, walkRangeX.y);
+                rb.MovePosition(new Vector2(newPos, rb.position.y));
+            }
+        }
+        else
+        {
+            SetState(BossStates.Attack);
+        }
     }
 
     void Attack()
     {
-        isAttacking = true;
-        float time = 0;
-        float startY = transform.position.y;
+        if (inAttack) return;
+        inAttack = true;
 
-        if(currentState != BossStates.Rage)
+        float startY = transform.position.y;
+        float targetY;
+        float attackDuration;
+
+        if (!inRage)
         {
             attackDuration = 0.7f;
             targetY = -1f;
         }
         else
         {
-            attackDuration = 0.5f;
+            attackDuration = 0.6f;
             targetY = -8f;
         }
 
         Sequence.Create()
-            .Chain(Tween.PositionY(transform, targetY, attackDuration * 0.75f))
-            .OnComplete(() => health.TakeDamage(1))
-            .ChainDelay(0.75f)
-            .Chain(Tween.PositionY(transform, startY, attackDuration))
-            .ChainDelay(0.75f)
-            .OnComplete(() =>
+        .Chain(Tween.PositionY(transform, targetY, attackDuration * 0.75f))
+        .ChainCallback(() => health.TakeDamage(1), warnIfTargetDestroyed: false)
+        .ChainDelay(0.75f)
+        .Chain(Tween.PositionY(transform, startY, attackDuration))
+        .ChainDelay(0.75f)
+        .OnComplete(() =>
+        {
+            if (health.currentHealth <= rageEnteryHp && !inRage)
             {
-                isAttacking = false;
-                attackTimer = attackCooldown;
-            });
+                SetState(BossStates.Rage);
+            }
+            if (health.currentHealth > rageEnteryHp || inRage)
+            {
+                SetState(BossStates.Chase);
+            }
+            inAttack = false;
+        }, warnIfTargetDestroyed: false);
     }
 
-    void RageAttack()
+    void RageIntro()
     {
-        inRageIntro = true;
+        if (inRage) return;
+
+        inRage = true;
         float duration = 0.5f;
+        Color targetColor;
+        ColorUtility.TryParseHtmlString("#8d5b5f", out targetColor);
 
-        Sequence.Create()
-            .Chain(Tween.PositionY(ground.transform, -10, duration))
-            .ChainDelay(1f)
-            .Chain(Tween.PositionY(transform, -3.31f, duration))
-            .ChainDelay(0.75f);
-
-        moveSpeed *= 1.3f;
-        attackTimer = 2.25f;
-
-        Color startColor = sr.color; 
-        Color targetColor = new Color(0.57f, 0.30f, 0.33f, 1f);
-
-        Sequence sequence = Sequence.Create()
-        .Group(EffectsManager.Instance.InterpolateColor(sr, targetColor, duration + 0.25f));
+        var sequence = Sequence.Create()
+        .Chain(Tween.PositionY(ground.transform, -10, duration))
+        .ChainDelay(1f)
+        .Chain(Tween.PositionY(transform, -3.31f, duration * 1.6f))
+        .ChainDelay(1.5f)
+        .Chain(instance.ChangeColor(sprites[0], targetColor, duration + 0.6f));
 
         if (volume.profile.TryGet(out SplitToning splitToning))
         {
             sequence.Group(
-                Tween.Custom(100f, 16f, duration + 0.25f, value =>
+                Tween.Custom(100f, 50f, duration + 0.6f, value =>
                 {
                     splitToning.balance.value = value;
-                })
+                }, Ease.InOutSine)
             );
         }
 
-        sequence.OnComplete(() => inRageIntro = false);
+        sequence.ChainDelay(0.5f);
+        FadeEye(ref sequence);
+
+        sequence.OnComplete(() =>
+        {
+            moveSpeed *= 1.25f;
+            attackCooldown *= 0.8f;
+            maceSpawner.spawn = true;
+            SetState(BossStates.Chase);
+        }, warnIfTargetDestroyed: false);
+    }
+
+    void FadeEye(ref Sequence sequence)
+    {
+        sequence
+        .Chain(instance.Fade(sprites[1], 1f, 0.2f))
+        .Chain(instance.ChangeColor(sprites[1], new Color(0f, 0f, 0f, 0.2f), 0.2f));
     }
 
     void Die()
     {
-        if (!died)
-        {
-            int unlockedLevel = 5;
-            PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel);
-            PlayerPrefs.Save();
-            died = true;
-        }
+        if (hasDied) return;
+        hasDied = true;
+        maceSpawner.spawn = false;
 
+        //Unlock next level
+        ScenesHandler.NextLevel();
         gameObject.GetComponent<CircleCollider2D>().enabled = false;
 
-        int count = spriteRenderers.Length;
-        int finished = 0;
-
-        for (int i = 0; i < spriteRenderers.Length; i++)
+        Sequence sequence = Sequence.Create();
+        FadeEye(ref sequence);
+        
+        if(sprites.Count > 0)
         {
-            EffectsManager.Instance.FadeOut(spriteRenderers[i], 0.25f)
-                .OnComplete(() =>
-                {
-                    finished++;
-                    if (finished == spriteRenderers.Length)
-                    {
-                        ScenesHandler.LoadSceneByIndex(Levels.Levels);
-                    }
-                });
+            for (int i = sprites.Count - 1; i >= 0; i--)
+            {
+                 sequence.Chain(EffectsManager.Instance.FadeOut(sprites[i], 0.25f));
+            }
         }
+
+        sequence.OnComplete(() =>
+        {
+            ScenesHandler.LoadSceneByIndex(Levels.Levels);
+        }, warnIfTargetDestroyed: false);
     }
 }

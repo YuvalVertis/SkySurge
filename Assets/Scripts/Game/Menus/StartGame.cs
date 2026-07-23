@@ -9,7 +9,6 @@ public sealed class StartGame : MonoBehaviour
     [SerializeField] Color lockedColor = new Color32(255, 255, 255, 125);
     [SerializeField] Color unlockedColor = new Color32(168, 80, 64, 250);
 
-
     void Start()
     {
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);

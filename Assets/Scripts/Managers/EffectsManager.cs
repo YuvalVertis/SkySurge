@@ -15,10 +15,10 @@ public sealed class EffectsManager : MonoBehaviour
         Instance = this;
     }
 
-    public void Fade(SpriteRenderer sprite, float duration, float alpha, Ease ease = Ease.OutQuad)
+    public Tween Fade(SpriteRenderer sprite, float duration, float alpha, Ease ease = Ease.OutQuad)
     {
-        if (sprite == null) return;
-        Tween.Alpha(sprite, alpha, duration, ease);
+        if (sprite == null) return default;
+        return Tween.Alpha(sprite, alpha, duration, ease);
     }
 
     public Sequence FadeRepeat(SpriteRenderer sprite, float duration, float delay, Ease ease = Ease.InOutSine)
@@ -79,7 +79,7 @@ public sealed class EffectsManager : MonoBehaviour
         }, warnIfTargetDestroyed: false);
     }
 
-    public Tween InterpolateColor(SpriteRenderer sprite, Color newColor, float duration, Ease ease = Ease.Linear)
+    public Tween ChangeColor(SpriteRenderer sprite, Color newColor, float duration, Ease ease = Ease.Linear)
     {
         if (sprite == null) return default;
 

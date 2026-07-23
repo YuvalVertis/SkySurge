@@ -1,4 +1,3 @@
-using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine;
 
@@ -87,7 +86,7 @@ public sealed class Player : MonoBehaviour
 
     void Update()
     {
-        if(jumpBufferCounter > 0)
+        if (jumpBufferCounter > 0)
         {
             jumpBufferCounter -= Time.deltaTime;
         }
@@ -122,7 +121,7 @@ public sealed class Player : MonoBehaviour
         if (jumpBufferCounter > 0f && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-            jumpBufferCounter = 0f; 
+            jumpBufferCounter = 0f;
         }
 
         //Fall
@@ -145,16 +144,7 @@ public sealed class Player : MonoBehaviour
 
     void HandleLevelCompletion()
     {
-        int currentLevel = SceneManager.GetActiveScene().buildIndex - 1;
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
-
-        if (currentLevel == unlockedLevel && unlockedLevel < 8)
-        {
-            unlockedLevel++;
-            PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel);
-            PlayerPrefs.Save();
-        }
-
+        ScenesHandler.NextLevel();
         ScenesHandler.LoadSceneByIndex(Levels.Levels);
     }
 
