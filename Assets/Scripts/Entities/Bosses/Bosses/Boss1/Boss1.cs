@@ -12,9 +12,14 @@ public class Boss1 : BossRoot
     [SerializeField] float moveSpeed;
     [SerializeField] float attackCooldown;
     [SerializeField] Vector2 walkRangeX;
-
+    
     [Header("Visuals")]
     [SerializeField] Volume volume;
+    [SerializeField] Camera renderCamera;
+    [SerializeField] float shakeStrength;
+    [SerializeField] float shakeDuration;
+    [SerializeField] float shakeFrequency;
+    [SerializeField] GameObject particleObj;
 
     [Header("Features")]
     [SerializeField] RandomSpawn maceSpawner;
@@ -22,13 +27,11 @@ public class Boss1 : BossRoot
 
     bool inRage, inAttack, hasDied;
     List<SpriteRenderer> sprites = new();
-    EffectsManager instance = EffectsManager.Instance;
     Rigidbody2D rb;
 
     void Awake()
     {
-        rb = gameObject.GetComponent<Rigidbody2D>();
-
+        rb = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(sprites);
         health = GetComponent<Health>();
     }
@@ -43,7 +46,7 @@ public class Boss1 : BossRoot
     {
         if (target == null || rb == null) return;
 
-        if (currentState == BossStates.Chase)
+        if (currentState == BossStates.Chase && !hasDied)
         {
             Chase();
         }
@@ -106,18 +109,23 @@ public class Boss1 : BossRoot
         }
 
         Sequence.Create()
-        .Chain(Tween.PositionY(transform, targetY, attackDuration * 0.75f))
-        .ChainCallback(() => health.TakeDamage(1), warnIfTargetDestroyed: false)
-        .ChainDelay(0.75f)
-        .Chain(Tween.PositionY(transform, startY, attackDuration))
-        .ChainDelay(0.75f)
+        .Chain(Tween.PositionY(transform, targetY, attackDuration * 0.9f, Ease.InSine))
+        .ChainCallback(() => 
+        {
+            health.TakeDamage(1);
+            EffectsManager.Instance.CameraShake(renderCamera, shakeStrength, shakeDuration, shakeFrequency);
+            ParticlesHandler.Play(particleObj);
+        }, warnIfTargetDestroyed: false)
+        .ChainDelay(1f)
+        .Chain(Tween.PositionY(transform, startY, attackDuration * 1.1f, Ease.OutSine))
+        .ChainDelay(1f)
         .OnComplete(() =>
         {
             if (health.currentHealth <= rageEnteryHp && !inRage)
             {
                 SetState(BossStates.Rage);
             }
-            if (health.currentHealth > rageEnteryHp || inRage)
+            else
             {
                 SetState(BossStates.Chase);
             }
@@ -125,6 +133,13 @@ public class Boss1 : BossRoot
         }, warnIfTargetDestroyed: false);
     }
 
+    void FadeEye(ref Sequence sequence, int index)
+    {
+        sequence
+        .Chain(EffectsManager.Instance.Fade(sprites[index], 1f, 0.25f))
+        .Chain(EffectsManager.Instance.ChangeColor(sprites[index], new Color(0f, 0f, 0f, 0.15f), 0.6f));
+    }
+    
     void RageIntro()
     {
         if (inRage) return;
@@ -137,9 +152,9 @@ public class Boss1 : BossRoot
         var sequence = Sequence.Create()
         .Chain(Tween.PositionY(ground.transform, -10, duration))
         .ChainDelay(1f)
-        .Chain(Tween.PositionY(transform, -3.31f, duration * 1.6f))
+        .Chain(Tween.PositionY(transform, -3.31f, duration * 1.6f, Ease.OutSine))
         .ChainDelay(1.5f)
-        .Chain(instance.ChangeColor(sprites[0], targetColor, duration + 0.6f));
+        .Chain(EffectsManager.Instance.ChangeColor(sprites[0], targetColor, duration + 0.6f));
 
         if (volume.profile.TryGet(out SplitToning splitToning))
         {
@@ -152,23 +167,19 @@ public class Boss1 : BossRoot
         }
 
         sequence.ChainDelay(0.5f);
-        FadeEye(ref sequence);
+        FadeEye(ref sequence, 1);
 
         sequence.OnComplete(() =>
         {
             moveSpeed *= 1.25f;
+            shakeStrength *= 1.15f;
+            shakeFrequency *= 1.1f;
             attackCooldown *= 0.8f;
             maceSpawner.spawn = true;
             SetState(BossStates.Chase);
         }, warnIfTargetDestroyed: false);
     }
 
-    void FadeEye(ref Sequence sequence)
-    {
-        sequence
-        .Chain(instance.Fade(sprites[1], 1f, 0.2f))
-        .Chain(instance.ChangeColor(sprites[1], new Color(0f, 0f, 0f, 0.2f), 0.2f));
-    }
 
     void Die()
     {
@@ -181,13 +192,13 @@ public class Boss1 : BossRoot
         gameObject.GetComponent<CircleCollider2D>().enabled = false;
 
         Sequence sequence = Sequence.Create();
-        FadeEye(ref sequence);
+        FadeEye(ref sequence, 2);
         
         if(sprites.Count > 0)
         {
             for (int i = sprites.Count - 1; i >= 0; i--)
             {
-                 sequence.Chain(EffectsManager.Instance.FadeOut(sprites[i], 0.25f));
+                 sequence.Chain(EffectsManager.Instance.FadeOut(sprites[i], 0.225f));
             }
         }
 

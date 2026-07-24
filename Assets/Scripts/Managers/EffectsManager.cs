@@ -27,15 +27,9 @@ public sealed class EffectsManager : MonoBehaviour
 
         Sequence sequence = Sequence.Create()
             .Chain(Tween.Alpha(sprite, 0f, duration, ease))
-            .ChainCallback(() =>
-            {
-                if (sprite != null) SetColliders(sprite, false);
-            })
+            .ChainCallback(() => SetColliders(sprite, false))
             .ChainDelay(delay)
-            .ChainCallback(() =>
-            {
-                if (sprite != null) SetColliders(sprite, true);
-            })
+            .ChainCallback(() => SetColliders(sprite, true))
             .Chain(Tween.Alpha(sprite, 1f, duration, ease))
             .ChainDelay(delay);
 
@@ -50,10 +44,7 @@ public sealed class EffectsManager : MonoBehaviour
 
         Tween.Alpha(sprite, 1f, duration, ease).OnComplete(() =>
         {
-            if (sprite == null) return;
-
             ActivateByState(true, sprite, state);
-
             if (enableColliders)
             {
                 SetColliders(sprite, true);
@@ -68,10 +59,7 @@ public sealed class EffectsManager : MonoBehaviour
 
         return Tween.Alpha(sprite, 0f, duration, ease).OnComplete(() =>
         {
-            if (sprite == null) return;
-
             ActivateByState(false, sprite, state);
-
             if (disableColliders)
             {
                 SetColliders(sprite, false);
@@ -79,41 +67,18 @@ public sealed class EffectsManager : MonoBehaviour
         }, warnIfTargetDestroyed: false);
     }
 
+    public Sequence CameraShake(Camera camera, float strength, float duration, float frequency = 10f, float delay = 0)
+    {
+        if (camera == null) return default;
+        
+        return Tween.ShakeCamera(camera, strength, duration, frequency, delay);
+    }
+
     public Tween ChangeColor(SpriteRenderer sprite, Color newColor, float duration, Ease ease = Ease.Linear)
     {
         if (sprite == null) return default;
 
         return Tween.Color(sprite, newColor, duration, ease);
-    }
-
-    public void ActivateByState(bool active, SpriteRenderer sprite, ChangeActiveState state)
-    {
-        switch (state)
-        {
-            case ChangeActiveState.NoChange:
-                return;
-
-            case ChangeActiveState.Change:
-                sprite.gameObject.SetActive(active);
-                break;
-
-            case ChangeActiveState.ChangeInParent:
-                Transform parent = sprite.transform.parent;
-                if (parent != null)
-                {
-                    parent.gameObject.SetActive(active);
-                }
-                break;
-        }
-    }
-
-    void SetColliders(SpriteRenderer sprite, bool enable)
-    {
-        Collider2D[] colliders = sprite.GetComponents<Collider2D>();
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = enable;
-        }
     }
 
     public Tween Scale(Transform target, Vector3 newSize, float duration, bool repeat = false, Ease ease = Ease.OutBack)
@@ -149,4 +114,39 @@ public sealed class EffectsManager : MonoBehaviour
         Vector3 end = start + new Vector3(0, 0, 360);
         return Tween.EulerAngles(target, start, end, duration, ease, infinite ? -1 : cycles);
     }
+
+    public void ActivateByState(bool active, SpriteRenderer sprite, ChangeActiveState state)
+    {
+        if(sprite == null) return;
+
+        switch (state)
+        {
+            case ChangeActiveState.NoChange:
+                return;
+
+            case ChangeActiveState.Change:
+                sprite.gameObject.SetActive(active);
+                break;
+
+            case ChangeActiveState.ChangeInParent:
+                Transform parent = sprite.transform.parent;
+                if (parent != null)
+                {
+                    parent.gameObject.SetActive(active);
+                }
+                break;
+        }
+    }
+
+    void SetColliders(SpriteRenderer sprite, bool enable)
+    {
+        if(sprite == null) return;
+
+        Collider2D[] colliders = sprite.GetComponents<Collider2D>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = enable;
+        }
+    }
+
 }
