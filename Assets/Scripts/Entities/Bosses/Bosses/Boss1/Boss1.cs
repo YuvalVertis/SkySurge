@@ -19,7 +19,8 @@ public class Boss1 : BossRoot
     [SerializeField] float shakeStrength;
     [SerializeField] float shakeDuration;
     [SerializeField] float shakeFrequency;
-    [SerializeField] GameObject particleObj;
+    [SerializeField] GameObject particleObj1;
+    [SerializeField] GameObject particleObj2;
 
     [Header("Features")]
     [SerializeField] RandomSpawn maceSpawner;
@@ -94,19 +95,8 @@ public class Boss1 : BossRoot
         inAttack = true;
 
         float startY = transform.position.y;
-        float targetY;
-        float attackDuration;
-
-        if (!inRage)
-        {
-            attackDuration = 0.7f;
-            targetY = -1f;
-        }
-        else
-        {
-            attackDuration = 0.6f;
-            targetY = -8f;
-        }
+        float targetY = startY -4.5f;
+        float attackDuration = inRage ? 0.6f : 0.7f;
 
         Sequence.Create()
         .Chain(Tween.PositionY(transform, targetY, attackDuration * 0.9f, Ease.InSine))
@@ -114,7 +104,8 @@ public class Boss1 : BossRoot
         {
             health.TakeDamage(1);
             EffectsManager.Instance.CameraShake(renderCamera, shakeStrength, shakeDuration, shakeFrequency);
-            ParticlesHandler.Play(particleObj);
+            ParticlesHandler.Play(particleObj1);
+            ParticlesHandler.Play(particleObj2);
         }, warnIfTargetDestroyed: false)
         .ChainDelay(1f)
         .Chain(Tween.PositionY(transform, startY, attackDuration * 1.1f, Ease.OutSine))
@@ -150,9 +141,9 @@ public class Boss1 : BossRoot
         ColorUtility.TryParseHtmlString("#8d5b5f", out targetColor);
 
         var sequence = Sequence.Create()
-        .Chain(Tween.PositionY(ground.transform, -10, duration))
+        .Chain(Tween.PositionY(ground.transform, -10.6f, duration))
         .ChainDelay(1f)
-        .Chain(Tween.PositionY(transform, -3.31f, duration * 1.6f, Ease.OutSine))
+        .Chain(Tween.PositionY(transform, -6.1f, duration * 1.6f, Ease.OutSine))
         .ChainDelay(1.5f)
         .Chain(EffectsManager.Instance.ChangeColor(sprites[0], targetColor, duration + 0.6f));
 
