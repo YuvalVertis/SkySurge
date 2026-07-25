@@ -26,8 +26,7 @@ public sealed class AdvSaw : MonoBehaviour
 
     void MoveSaw()
     {
-        if (points.Length < 2 || spinTransform == null || moveSpeed <= 0) return;
-        if (!gameObject.activeInHierarchy) return;
+        if (points.Length < 2 || spinTransform == null || moveSpeed <= 0 || !gameObject.activeInHierarchy) return;
 
         Vector3 startPos = spinTransform.position;
         Vector3 targetPos = points[currentPoint].position;
