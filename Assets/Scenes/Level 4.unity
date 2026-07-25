@@ -1073,12 +1073,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2260714640028095852, guid: 623415b504b4b77438e5a9a46d18bd88, type: 3}
       propertyPath: m_Pitch
-      value: 0.87
+      value: 0.946
       objectReference: {fileID: 0}
     - target: {fileID: 2260714640028095852, guid: 623415b504b4b77438e5a9a46d18bd88, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 8f27544e34df62649a89551dc1181aad, type: 3}
+      objectReference: {fileID: 8300000, guid: b4520f9dedbc6864fadf15c610a5084b, type: 3}
     - target: {fileID: 4490795551908954865, guid: 623415b504b4b77438e5a9a46d18bd88, type: 3}
       propertyPath: m_LocalPosition.x
       value: -33.648556
@@ -1217,7 +1217,7 @@ Transform:
   m_GameObject: {fileID: 1649846414}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.410746, y: 3.6607208, z: -9.883845}
+  m_LocalPosition: {x: -4.410746, y: 2.1607208, z: -9.883845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1280,9 +1280,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1350072385}
-  smoothFactor: 35
+  smoothFactor: 15
   minY: -20
   maxY: -0.1
+  followPlayer: 1
   offset: {x: 0, y: 3.5, z: 0}
 --- !u!1 &1883806557
 GameObject:
@@ -1717,7 +1718,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.25
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3681,7 +3682,7 @@ ParticleSystem:
     x:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -7
+      scalar: -11
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -3734,7 +3735,7 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -4
+      scalar: -5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -6505,6 +6506,7 @@ MonoBehaviour:
   target: {fileID: 1350072385}
   ground: {fileID: 380782905}
   moveSpeed: 3.15
+  smoothTime: 0.1
   attackCooldown: 3.5
   walkRangeX: {x: -7.63, y: 7.63}
   volume: {fileID: 30215081}
@@ -7159,7 +7161,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.25
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -9123,7 +9125,7 @@ ParticleSystem:
     x:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 7
+      scalar: 11
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -9176,7 +9178,7 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -4
+      scalar: -5
       minScalar: 0
       maxCurve:
         serializedVersion: 2

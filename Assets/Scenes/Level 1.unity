@@ -798,6 +798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 4, y: 0, z: 0}
   target: {fileID: 1771715662}
+  followPlayer: 1
   smoothFactor: 2.5
   min: 0.4
   max: 52.8
@@ -2809,11 +2810,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266779, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_Size.x
-      value: 5.1241364
+      value: 5.1335506
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266779, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_Size.y
-      value: 4.7232933
+      value: 4.7002974
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266779, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_Enabled
@@ -2821,11 +2822,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266779, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_Offset.x
-      value: 0.008381605
+      value: 0.0036745071
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266779, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_Offset.y
-      value: -0.120562434
+      value: -0.13206041
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266781, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_Name
@@ -2833,7 +2834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266781, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266781, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_TagString

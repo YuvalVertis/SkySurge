@@ -11,10 +11,9 @@ public sealed class Player : MonoBehaviour
     [Header("Jump Logic")]
     public float jumpSpeed;
     public float gravityScaleMult;
-    public bool fastFall = true;
     public float jumpBufferTimer = 0.1f;
+    public bool fastFall = true;
     float jumpBufferCounter;
-
 
     [Header("Ground Check")]
     [SerializeField] float rayDistance;
@@ -112,12 +111,13 @@ public sealed class Player : MonoBehaviour
 
             if (activePlatform.velocity.y < 0f && isGrounded)
             {
-                targetSpeedY = activePlatform.velocity.y;
+                targetSpeedY += activePlatform.velocity.y;
             }
         }
 
         rb.velocity = new Vector2(targetSpeedX, targetSpeedY);
-
+        
+        //Jump 
         if (jumpBufferCounter > 0f && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);

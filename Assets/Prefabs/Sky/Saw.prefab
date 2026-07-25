@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spinDuration: 1
-  moveSpeed: 3.25
+  moveSpeed: 3.4
   points:
   - {fileID: 7574460274153480306}
   - {fileID: 9193035739134655676}

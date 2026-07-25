@@ -10,9 +10,10 @@ public class Boss1 : BossRoot
     [SerializeField] Transform target;
     [SerializeField] Transform ground;
     [SerializeField] float moveSpeed;
+    [SerializeField] float smoothTime;
     [SerializeField] float attackCooldown;
     [SerializeField] Vector2 walkRangeX;
-    
+
     [Header("Visuals")]
     [SerializeField] Volume volume;
     [SerializeField] Camera renderCamera;
@@ -68,7 +69,8 @@ public class Boss1 : BossRoot
                 break;
         }
     }
-
+    
+    float velocityX;
     void Chase()
     {
         float distance = target.position.x - transform.position.x;
@@ -76,11 +78,11 @@ public class Boss1 : BossRoot
         {
             if (Mathf.Abs(distance) > 0.05f)
             {
-                float direction = Mathf.Sign(distance);
-                float newPos = rb.position.x + direction * moveSpeed * Time.deltaTime;
+                float targetX = target.position.x;
+                float newX = Mathf.SmoothDamp(rb.position.x, targetX, ref velocityX, smoothTime, moveSpeed);
 
-                newPos = Mathf.Clamp(newPos, walkRangeX.x, walkRangeX.y);
-                rb.MovePosition(new Vector2(newPos, rb.position.y));
+                newX = Mathf.Clamp(newX, walkRangeX.x, walkRangeX.y);
+                rb.MovePosition(new Vector2(newX, rb.position.y));
             }
         }
         else
@@ -95,12 +97,12 @@ public class Boss1 : BossRoot
         inAttack = true;
 
         float startY = transform.position.y;
-        float targetY = startY -4.5f;
+        float targetY = startY - 4.5f;
         float attackDuration = inRage ? 0.6f : 0.7f;
 
         Sequence.Create()
         .Chain(Tween.PositionY(transform, targetY, attackDuration * 0.9f, Ease.InSine))
-        .ChainCallback(() => 
+        .ChainCallback(() =>
         {
             health.TakeDamage(1);
             EffectsManager.Instance.CameraShake(renderCamera, shakeStrength, shakeDuration, shakeFrequency);
@@ -130,7 +132,7 @@ public class Boss1 : BossRoot
         .Chain(EffectsManager.Instance.Fade(sprites[index], 1f, 0.25f))
         .Chain(EffectsManager.Instance.ChangeColor(sprites[index], new Color(0f, 0f, 0f, 0.15f), 0.6f));
     }
-    
+
     void RageIntro()
     {
         if (inRage) return;
@@ -141,9 +143,9 @@ public class Boss1 : BossRoot
         ColorUtility.TryParseHtmlString("#8d5b5f", out targetColor);
 
         var sequence = Sequence.Create()
-        .Chain(Tween.PositionY(ground.transform, -10.6f, duration))
+        .Chain(Tween.PositionY(ground.transform, -10.9f, duration))
         .ChainDelay(1f)
-        .Chain(Tween.PositionY(transform, -6.1f, duration * 1.6f, Ease.OutSine))
+        .Chain(Tween.PositionY(transform, -6.35f, duration * 1.6f, Ease.OutSine))
         .ChainDelay(1.5f)
         .Chain(EffectsManager.Instance.ChangeColor(sprites[0], targetColor, duration + 0.6f));
 
@@ -184,12 +186,12 @@ public class Boss1 : BossRoot
 
         Sequence sequence = Sequence.Create();
         FadeEye(ref sequence, 2);
-        
-        if(sprites.Count > 0)
+
+        if (sprites.Count > 0)
         {
             for (int i = sprites.Count - 1; i >= 0; i--)
             {
-                 sequence.Chain(EffectsManager.Instance.FadeOut(sprites[i], 0.225f));
+                sequence.Chain(EffectsManager.Instance.FadeOut(sprites[i], 0.225f));
             }
         }
 
