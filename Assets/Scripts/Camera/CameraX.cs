@@ -5,9 +5,9 @@ public sealed class CameraX : MonoBehaviour
     [Header("Configuration")]
     [SerializeField] Vector3 offset;
     [SerializeField] Transform target;
-    [SerializeField] bool followPlayer;
     [SerializeField] float smoothFactor;
     [SerializeField] float min, max;
+    [SerializeField] bool followPlayer;
 
     void LateUpdate()
     {

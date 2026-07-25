@@ -384,7 +384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266781, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6412042181086266782, guid: 484c64c67eab2b74e92de586b83ed005, type: 3}
       propertyPath: m_RootOrder
@@ -1008,7 +1008,7 @@ GameObject:
   m_Component:
   - component: {fileID: 889418189}
   m_Layer: 0
-  m_Name: ---Environement---
+  m_Name: ---Environment---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2304,10 +2304,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 4, y: 0, z: 0}
   target: {fileID: 726772135}
-  followPlayer: 1
   smoothFactor: 2.5
   min: -3
   max: 75
+  followPlayer: 1
 --- !u!1001 &1461051294
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2589,7 +2589,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4821510862473037488, guid: 1ffcefdc24806384f8c8d088d14647ed, type: 3}
       propertyPath: m_Name
-      value: Cloud14 (1)
+      value: 'Cloud14 '
       objectReference: {fileID: 0}
     - target: {fileID: 4821510862473037502, guid: 1ffcefdc24806384f8c8d088d14647ed, type: 3}
       propertyPath: m_RootOrder
@@ -2696,7 +2696,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1942710810}
   m_Layer: 0
-  m_Name: BG
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3109,6 +3109,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Moving Cloud
       objectReference: {fileID: 0}
+    - target: {fileID: 2477673778076194508, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.75
+      objectReference: {fileID: 0}
     - target: {fileID: 2828885189067760709, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_UsedByEffector
       value: 0
@@ -3119,7 +3123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3121436493940028579, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.55
+      value: -2.75
       objectReference: {fileID: 0}
     - target: {fileID: 5164400180670451616, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3127,7 +3131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5164400180670451616, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.55
+      value: -2.75
       objectReference: {fileID: 0}
     - target: {fileID: 6635449593400069521, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3135,7 +3139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6635449593400069521, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.25
+      value: 0.275
       objectReference: {fileID: 0}
     - target: {fileID: 6635449593400069521, guid: afaa06aaeacd136488dce1d7f569957c, type: 3}
       propertyPath: m_LocalPosition.z

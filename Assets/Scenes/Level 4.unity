@@ -401,6 +401,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1738224877370186743}
+  - {fileID: 1350072385}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &492163126
@@ -700,7 +701,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 426145585}
     m_Modifications:
     - target: {fileID: 528433263133782217, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_Name
@@ -716,7 +717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.11615466
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalRotation.w
@@ -724,15 +725,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 528433263133782219, guid: 608482a3f30564945bdcb18200240962, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1073,7 +1074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2260714640028095852, guid: 623415b504b4b77438e5a9a46d18bd88, type: 3}
       propertyPath: m_Pitch
-      value: 0.946
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 2260714640028095852, guid: 623415b504b4b77438e5a9a46d18bd88, type: 3}
       propertyPath: m_audioClip
@@ -1295,7 +1296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1883806558}
   m_Layer: 0
-  m_Name: ---Environement---
+  m_Name: ---Environment---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6303,7 +6304,7 @@ SpriteRenderer:
   m_SortingLayerID: 1215350011
   m_SortingLayer: -3
   m_SortingOrder: -5
-  m_Sprite: {fileID: 21300000, guid: 76379c25dd10456408941cacae0f5f76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3649f4b5e72c0c54eb5dce708e31f94a, type: 3}
   m_Color: {r: 1, g: 0.9607843, b: 0.98039216, a: 0.92156863}
   m_FlipX: 0
   m_FlipY: 0
@@ -11696,4 +11697,3 @@ SceneRoots:
   - {fileID: 426145585}
   - {fileID: 1883806558}
   - {fileID: 1057605308}
-  - {fileID: 1078171263}

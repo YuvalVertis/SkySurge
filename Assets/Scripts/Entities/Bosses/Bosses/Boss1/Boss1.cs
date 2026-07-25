@@ -109,9 +109,9 @@ public class Boss1 : BossRoot
             ParticlesHandler.Play(particleObj1);
             ParticlesHandler.Play(particleObj2);
         }, warnIfTargetDestroyed: false)
-        .ChainDelay(1f)
+        .ChainDelay(0.9f)
         .Chain(Tween.PositionY(transform, startY, attackDuration * 1.1f, Ease.OutSine))
-        .ChainDelay(1f)
+        .ChainDelay(0.9f)
         .OnComplete(() =>
         {
             if (health.currentHealth <= rageEnteryHp && !inRage)
@@ -146,7 +146,7 @@ public class Boss1 : BossRoot
         .Chain(Tween.PositionY(ground.transform, -10.9f, duration))
         .ChainDelay(1f)
         .Chain(Tween.PositionY(transform, -6.35f, duration * 1.6f, Ease.OutSine))
-        .ChainDelay(1.5f)
+        .ChainDelay(1.25f)
         .Chain(EffectsManager.Instance.ChangeColor(sprites[0], targetColor, duration + 0.6f));
 
         if (volume.profile.TryGet(out SplitToning splitToning))
