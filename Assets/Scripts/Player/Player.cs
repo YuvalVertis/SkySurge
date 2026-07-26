@@ -28,7 +28,8 @@ public sealed class Player : MonoBehaviour
     public bool allowJumpAnim;
 
     bool isGrounded, run;
-    float direction, defaultGravity;
+    float direction;
+    public float defaultGravity;
     SpriteRenderer sprite;
     Rigidbody2D rb;
     Animator anim;
